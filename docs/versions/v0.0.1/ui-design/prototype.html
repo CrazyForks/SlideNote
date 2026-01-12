@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SlideNote UI 原型 - v0.0.2</title>
+  <style>
+    /* ============================================
+       SlideNote UI 原型 - v0.0.2
+       ============================================ */
+
+    /* CSS Variables - 设计系统 */
+    :root {
+      /* 色彩 */
+      --color-bg-primary: #ffffff;
+      --color-bg-secondary: #f5f5f5;
+      --color-bg-hover: #e8e8e8;
+      --color-bg-active: #f0f7ff;
+      --color-text-primary: #1a1a1a;
+      --color-text-secondary: #666666;
+      --color-text-tertiary: #999999;
+      --color-text-placeholder: #bbbbbb;
+      --color-border: #e5e5e5;
+      --color-border-focus: #0066cc;
+      --color-primary: #0066cc;
+      --color-primary-light: #f0f7ff;
+      --color-error: #ff4444;
+      --color-success: #22c55e;
+      --color-overlay: rgba(0, 0, 0, 0.4);
+
+      /* 字体 */
+      --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --font-size-xs: 11px;
+      --font-size-sm: 12px;
+      --font-size-base: 13px;
+      --font-size-md: 14px;
+      --font-size-lg: 16px;
+      --font-size-xl: 20px;
+
+      /* 间距 */
+      --spacing-xs: 3px;
+      --spacing-sm: 6px;
+      --spacing-md: 12px;
+      --spacing-lg: 18px;
+      --spacing-xl: 24px;
+
+      /* 圆角 */
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+
+      /* 阴影 */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+      /* 动画 */
+      --duration-fast: 150ms;
+      --duration-base: 200ms;
+      --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-base);
+      color: var(--color-text-primary);
+      background: #e0e0e0;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: var(--spacing-lg);
+      gap: var(--spacing-lg);
+    }
+
+    input, textarea, button {
+      font: inherit;
+      color: inherit;
+      border: none;
+      outline: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: none;
+      font-family: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-border-focus);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       主容器
+       ============================================ */
+    .prototype-wrapper {
+      background: #e0e0e0;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-md);
+    }
+
+    .prototype-label {
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* ============================================
+       SlideNote 侧边栏
+       ============================================ */
+    .slidenote-sidebar {
+      width: 480px;
+      height: 560px;
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ============================================
+       顶部工具栏
+       ============================================ */
+    .toolbar {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-sm);
+      height: 44px;
+      background: var(--color-bg-primary);
+    }
+
+    /* 搜索图标按钮 */
+    .search-icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-fast) var(--ease-out);
+      flex-shrink: 0;
+    }
+
+    .search-icon-btn:hover {
+      background: var(--color-bg-hover);
+      color: var(--color-text-secondary);
+    }
+
+    .search-icon-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 搜索框展开状态 */
+    .search-bar-expanded {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: 0 var(--spacing-sm);
+      height: 32px;
+      background: var(--color-bg-secondary);
+      border-radius: var(--radius-md);
+      animation: expandSearch var(--duration-fast) var(--ease-out);
+    }
+
+    @keyframes expandSearch {
+      from { opacity: 0; transform: scaleX(0.8); }
+      to { opacity: 1; transform: scaleX(1); }
+    }
+
+    .search-bar-expanded .search-icon {
+      color: var(--color-text-tertiary);
+      flex-shrink: 0;
+    }
+
+    .search-bar-expanded .search-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .search-bar-expanded .search-input {
+      flex: 1;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-primary);
+      min-width: 0;
+    }
+
+    .search-bar-expanded .search-input::placeholder {
+      color: var(--color-text-placeholder);
+    }
+
+    .search-bar-expanded .search-close {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+
+    .search-bar-expanded .search-close:hover {
+      background: var(--color-bg-hover);
+    }
+
+    /* 新建按钮（方案 A：蓝色文字） */
+    .btn-new-note {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      height: 32px;
+      color: var(--color-primary);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      transition: all var(--duration-fast) var(--ease-out);
+      flex-shrink: 0;
+    }
+
+    .btn-new-note:hover {
+      background: var(--color-primary-light);
+    }
+
+    .btn-new-note:active {
+      background: rgba(0, 102, 204, 0.15);
+    }
+
+    .btn-new-note svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ============================================
+       左侧：笔记列表
+       ============================================ */
+    .note-list-section {
+      width: 180px;
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 笔记列表 */
+    .note-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-sm);
+    }
+
+    .note-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .note-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .note-list::-webkit-scrollbar-thumb {
+      background: #d0d0d0;
+      border-radius: 2px;
+    }
+
+    /* 笔记列表项 */
+    .note-item {
+      position: relative;
+      padding: var(--spacing-sm) var(--spacing-md);
+      margin-bottom: 2px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+
+    .note-item:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .note-item.active {
+      background: var(--color-bg-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .note-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .note-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-sm);
+    }
+
+    .note-item-title {
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .note-item-delete {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-sm);
+      opacity: 0;
+      transition: all var(--duration-fast);
+      flex-shrink: 0;
+    }
+
+    .note-item:hover .note-item-delete {
+      opacity: 1;
+    }
+
+    .note-item-delete:hover {
+      background: #fee;
+      color: var(--color-error);
+    }
+
+    .note-item-preview {
+      font-size: 10px;
+      color: var(--color-text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    /* 笔记列表空状态 */
+    .note-list-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--spacing-xl) var(--spacing-md);
+      text-align: center;
+    }
+
+    .note-list-empty .empty-icon {
+      font-size: 28px;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .note-list-empty .empty-title {
+      font-size: var(--font-size-xs);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .note-list-empty .empty-desc {
+      font-size: 10px;
+    }
+
+    /* 底部页脚 */
+    .note-list-footer {
+      padding: var(--spacing-md);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-bg-secondary);
+    }
+
+    .app-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+      text-align: center;
+    }
+
+    .footer-author {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .footer-author .author-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-author .author-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer-tagline {
+      font-size: 10px;
+      color: var(--color-text-tertiary);
+      font-style: italic;
+    }
+
+    /* ============================================
+       右侧：笔记内容区
+       ============================================ */
+    .note-content-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg-primary);
+    }
+
+    .note-header {
+      padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .note-title-input {
+      width: 100%;
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .note-title-input::placeholder {
+      color: var(--color-text-placeholder);
+    }
+
+    .note-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .note-time {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    .note-save-status {
+      font-size: var(--font-size-xs);
+      color: var(--color-success);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      opacity: 0;
+      transition: opacity var(--duration-base);
+    }
+
+    .note-save-status.show {
+      opacity: 1;
+    }
+
+    .note-editor {
+      flex: 1;
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .note-content-textarea {
+      width: 100%;
+      height: 100%;
+      font-size: var(--font-size-sm);
+      line-height: 1.7;
+      color: var(--color-text-primary);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .note-content-textarea::placeholder {
+      color: var(--color-text-placeholder);
+    }
+
+    /* 编辑器空状态 */
+    .editor-empty {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .editor-empty .empty-icon {
+      font-size: 40px;
+      margin-bottom: var(--spacing-md);
+      opacity: 0.4;
+    }
+
+    .editor-empty .empty-title {
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .editor-empty .empty-desc {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 状态 1：默认状态 -->
+  <div class="prototype-wrapper">
+    <div class="prototype-label">SlideNote UI v0.0.2 — 默认状态</div>
+
+    <div class="slidenote-sidebar">
+      <div class="note-list-section">
+        <!-- 顶部工具栏 -->
+        <div class="toolbar">
+          <!-- 搜索图标按钮 -->
+          <button class="search-icon-btn" title="搜索">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
+
+          <!-- 新建笔记按钮 -->
+          <button class="btn-new-note">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            新建笔记
+          </button>
+        </div>
+
+        <!-- 笔记列表 -->
+        <div class="note-list">
+          <div class="note-item active">
+            <div class="note-item-header">
+              <span class="note-item-title">常用账号</span>
+              <button class="note-item-delete" title="删除">×</button>
+            </div>
+            <div class="note-item-preview">Gmail · AWS · 阿里云</div>
+          </div>
+
+          <div class="note-item">
+            <div class="note-item-header">
+              <span class="note-item-title">云配置</span>
+              <button class="note-item-delete" title="删除">×</button>
+            </div>
+            <div class="note-item-preview">AccessKey · Secret</div>
+          </div>
+
+          <div class="note-item">
+            <div class="note-item-header">
+              <span class="note-item-title">API Keys</span>
+              <button class="note-item-delete" title="删除">×</button>
+            </div>
+            <div class="note-item-preview">OpenAI · Claude</div>
+          </div>
+
+          <div class="note-item">
+            <div class="note-item-header">
+              <span class="note-item-title">服务器</span>
+              <button class="note-item-delete" title="删除">×</button>
+            </div>
+            <div class="note-item-preview">192.168.1.100</div>
+          </div>
+
+          <div class="note-item">
+            <div class="note-item-header">
+              <span class="note-item-title">备忘录</span>
+              <button class="note-item-delete" title="删除">×</button>
+            </div>
+            <div class="note-item-preview">待办事项 · 会议记录</div>
+          </div>
+        </div>
+
+        <!-- 底部页脚 -->
+        <div class="note-list-footer">
+          <div class="app-footer">
+            <div class="footer-author">
+              由 <a href="#" class="author-link">咕咚同学</a> 开发
+            </div>
+            <div class="footer-tagline">Simple notes, always by your side</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：笔记内容 -->
+      <div class="note-content-section">
+        <div class="note-header">
+          <input type="text" class="note-title-input" value="常用账号" placeholder="未命名笔记">
+          <div class="note-meta">
+            <span class="note-time">最后编辑: 2 分钟前</span>
+            <span class="note-save-status show">✓ 已保存</span>
+          </div>
+        </div>
+
+        <div class="note-editor">
+          <textarea class="note-content-textarea" placeholder="开始输入...">Gmail 账号
+xxx@gmail.com
+密码: xxxxxxxx</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 状态 2：搜索展开 -->
+  <div class="prototype-wrapper">
+    <div class="prototype-label">SlideNote UI v0.0.2 — 搜索展开状态</div>
+
+    <div class="slidenote-sidebar">
+      <div class="note-list-section">
+        <!-- 顶部工具栏 -->
+        <div class="toolbar">
+          <!-- 搜索框展开 -->
+          <div class="search-bar-expanded">
+            <span class="search-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </span>
+            <input type="text" class="search-input" placeholder="搜索笔记..." value="常用">
+            <button class="search-close" title="关闭 (ESC)">×</button>
+          </div>
+
+          <!-- 新建笔记按钮（简化文字） -->
+          <button class="btn-new-note">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            新建
+          </button>
+        </div>
+
+        <!-- 搜索结果列表 -->
+        <div class="note-list">
+          <div class="note-item active">
+            <div class="note-item-header">
+              <span class="note-item-title">常用账号</span>
+              <button class="note-item-delete" title="删除">×</button>
+            </div>
+            <div class="note-item-preview">Gmail · AWS · 阿里云</div>
+          </div>
+
+          <div class="note-item">
+            <div class="note-item-header">
+              <span class="note-item-title">常用命令</span>
+              <button class="note-item-delete" title="删除">×</button>
+            </div>
+            <div class="note-item-preview">git · docker · kubectl</div>
+          </div>
+        </div>
+
+        <div class="note-list-footer">
+          <div class="app-footer">
+            <div class="footer-author">
+              由 <a href="#" class="author-link">咕咚同学</a> 开发
+            </div>
+            <div class="footer-tagline">Simple notes, always by your side</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-content-section">
+        <div class="note-header">
+          <input type="text" class="note-title-input" value="常用账号" placeholder="未命名笔记">
+        </div>
+
+        <div class="note-editor">
+          <textarea class="note-content-textarea">Gmail 账号
+xxx@gmail.com</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 状态 3：空状态 -->
+  <div class="prototype-wrapper">
+    <div class="prototype-label">SlideNote UI v0.0.2 — 空状态</div>
+
+    <div class="slidenote-sidebar">
+      <div class="note-list-section">
+        <div class="toolbar">
+          <button class="search-icon-btn" title="搜索">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
+
+          <button class="btn-new-note">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            新建笔记
+          </button>
+        </div>
+
+        <div class="note-list">
+          <div class="note-list-empty">
+            <div class="empty-icon">📝</div>
+            <div class="empty-title">还没有笔记</div>
+            <div class="empty-desc">点击"新建笔记"开始</div>
+          </div>
+        </div>
+
+        <div class="note-list-footer">
+          <div class="app-footer">
+            <div class="footer-author">
+              由 <a href="#" class="author-link">咕咚同学</a> 开发
+            </div>
+            <div class="footer-tagline">Simple notes, always by your side</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-content-section">
+        <div class="editor-empty">
+          <div class="empty-icon">📄</div>
+          <div class="empty-title">选择或创建一条笔记</div>
+          <div class="empty-desc">开始编辑你的第一条笔记</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 交互说明 -->
+  <div style="padding: var(--spacing-md); background: white; border-radius: var(--radius-md); font-size: var(--font-size-xs);">
+    <h3 style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-sm);">📐 交互设计 v0.0.2</h3>
+    <ul style="padding-left: var(--spacing-lg); color: var(--color-text-secondary);">
+      <li><strong>默认状态:</strong> 搜索图标 + 新建笔记按钮（蓝色文字）</li>
+      <li><strong>点击搜索:</strong> 展开搜索框，新建按钮文字缩短为"新建"</li>
+      <li><strong>关闭搜索:</strong> 点击 × 或按 ESC，恢复默认状态</li>
+      <li><strong>搜索时:</strong> 实时过滤笔记列表，新建功能仍可用</li>
+      <li><strong>样式:</strong> 新建按钮白底蓝字，hover 浅蓝背景</li>
+    </ul>
+  </div>
+
+</body>
+</html>

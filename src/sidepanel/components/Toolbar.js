@@ -1,0 +1,156 @@
+/**
+ * Toolbar - 顶部工具栏组件
+ * 包含搜索图标/搜索框 + 新建按钮
+ */
+
+export class Toolbar {
+  constructor(props = {}) {
+    this.props = props;
+    this.state = {
+      isSearchExpanded: false,
+      searchValue: '',
+    };
+    this.el = null;
+    this._searchContainer = null;  // 搜索区域容器
+    this._searchInput = null;
+    this._newNoteBtnText = null;  // 新建按钮文字 span
+    this._searchBtn = null;        // 搜索图标按钮引用
+  }
+
+  render() {
+    const container = document.createElement('div');
+    container.className = 'toolbar';
+
+    // 搜索区域容器（用于后续更新）
+    this._searchContainer = document.createElement('div');
+    this._searchContainer.className = 'search-container';
+    this._renderSearchArea(this._searchContainer);
+    container.appendChild(this._searchContainer);
+
+    // 新建笔记按钮
+    const newNoteBtn = document.createElement('button');
+    newNoteBtn.className = 'btn-new-note';
+    newNoteBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span></span>
+    `;
+    this._newNoteBtnText = newNoteBtn.querySelector('span');
+    this._updateNewNoteText();
+    newNoteBtn.onclick = () => {
+      this.props.bus?.emit('note:create');
+    };
+
+    container.appendChild(newNoteBtn);
+
+    this.el = container;
+    return container;
+  }
+
+  /**
+   * 渲染搜索区域
+   * @private
+   */
+  _renderSearchArea(container) {
+    container.innerHTML = '';
+
+    if (this.state.isSearchExpanded) {
+      // 展开的搜索框
+      const searchExpanded = document.createElement('div');
+      searchExpanded.className = 'search-bar-expanded';
+
+      // 搜索图标
+      const icon = document.createElement('span');
+      icon.className = 'search-icon';
+      icon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      `;
+
+      // 输入框
+      const input = document.createElement('input');
+      input.className = 'search-input';
+      input.value = this.state.searchValue;
+      input.placeholder = '搜索笔记...';
+      input.oninput = (e) => {
+        this.state.searchValue = e.target.value;
+        this.props.bus?.emit('search:change', e.target.value);
+      };
+      input.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+          this.collapseSearch();
+        }
+      };
+
+      // 关闭按钮
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'search-close';
+      closeBtn.innerHTML = '×';
+      closeBtn.title = '关闭搜索 (ESC)';
+      closeBtn.onclick = () => this.collapseSearch();
+
+      searchExpanded.append(icon, input, closeBtn);
+      container.appendChild(searchExpanded);
+
+      this._searchInput = input;
+      // 自动聚焦
+      setTimeout(() => input.focus(), 50);
+    } else {
+      // 搜索图标按钮
+      const searchBtn = document.createElement('button');
+      searchBtn.className = 'search-icon-btn';
+      searchBtn.title = '搜索';
+      searchBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      `;
+      searchBtn.onclick = () => this.expandSearch();
+      container.appendChild(searchBtn);
+      this._searchBtn = searchBtn;
+    }
+  }
+
+  /**
+   * 更新新建按钮文字
+   * @private
+   */
+  _updateNewNoteText() {
+    if (this._newNoteBtnText) {
+      this._newNoteBtnText.textContent = this.state.isSearchExpanded ? '新建' : '新建笔记';
+    }
+  }
+
+  /**
+   * 展开搜索框
+   */
+  expandSearch() {
+    this.state.isSearchExpanded = true;
+    this._renderSearchArea(this._searchContainer);
+    this._updateNewNoteText();
+    this.props.bus?.emit('search:expand');
+  }
+
+  /**
+   * 收起搜索框
+   */
+  collapseSearch() {
+    this.state.isSearchExpanded = false;
+    this.state.searchValue = '';
+    this._renderSearchArea(this._searchContainer);
+    this._updateNewNoteText();
+    this.props.bus?.emit('search:collapse');
+    this.props.bus?.emit('search:change', '');
+  }
+
+  /**
+   * 聚焦搜索输入框
+   */
+  focusSearch() {
+    this._searchInput?.focus();
+  }
+}

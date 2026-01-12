@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "SlideNote",
+  "version": "0.0.1",
+  "description": "侧边栏笔记插件，跨设备同步",
+  "permissions": [
+    "storage",
+    "sidePanel"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "打开 SlideNote"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "icons": {
+    "16": "icons/icon-16.svg",
+    "32": "icons/icon-32.svg",
+    "48": "icons/icon-48.svg",
+    "128": "icons/icon-128.svg"
+  }
+}
