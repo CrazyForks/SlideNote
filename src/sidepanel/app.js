@@ -97,7 +97,10 @@ class App {
     // 小红书
     const xhsLink = this._createSocialLink('https://www.xiaohongshu.com/user/profile/6690863b000000001e00e6a4', '小红书', '/icons/social-xiaohongshu.svg');
 
-    socialDiv.append(githubLink, twitterLink, jikeLink, xhsLink);
+    // 微信公众号 (带二维码)
+    const wechatLink = this._createWeChatLink('https://gudong.s3.bitiful.net/asset/gongzhonghao.jpg');
+
+    socialDiv.append(githubLink, twitterLink, jikeLink, xhsLink, wechatLink);
 
     const taglineDiv = document.createElement('div');
     taglineDiv.className = 'footer-tagline';
@@ -177,6 +180,35 @@ class App {
     img.alt = tooltip;
     img.className = 'footer-social-icon';
     link.appendChild(img);
+
+    return link;
+  }
+
+  /**
+   * 创建微信链接（带二维码）
+   * @private
+   */
+  _createWeChatLink(qrCodeUrl) {
+    const link = document.createElement('span');
+    link.className = 'footer-social-link footer-wechat-link';
+
+    // 创建图片元素加载 SVG 图标
+    const img = document.createElement('img');
+    img.src = '/icons/social-wechat.svg';
+    img.alt = '微信公众号';
+    img.className = 'footer-social-icon';
+    link.appendChild(img);
+
+    // 创建二维码弹层
+    const qrPopup = document.createElement('div');
+    qrPopup.className = 'footer-qr-popup';
+    const qrImg = document.createElement('img');
+    qrImg.src = qrCodeUrl;
+    qrImg.alt = '公众号二维码';
+    qrImg.className = 'footer-qr-img';
+    qrPopup.appendChild(qrImg);
+
+    link.appendChild(qrPopup);
 
     return link;
   }

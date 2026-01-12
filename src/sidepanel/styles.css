@@ -413,6 +413,7 @@ button {
   color: var(--color-text-primary);
   transition: all var(--duration-fast);
   border-radius: var(--radius-sm);
+  cursor: pointer;
 }
 
 .footer-social-link:hover {
@@ -436,6 +437,43 @@ button {
   box-shadow: var(--shadow-md);
   pointer-events: none;
   z-index: 10;
+}
+
+/* 微信链接不显示文字 tooltip */
+.footer-wechat-link:hover::after {
+  display: none;
+}
+
+/* 微信二维码弹层 */
+.footer-qr-popup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  width: 140px;
+  padding: 8px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--duration-fast) var(--ease-out);
+  pointer-events: none;
+  z-index: 100;
+}
+
+.footer-wechat-link:hover .footer-qr-popup {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+}
+
+.footer-qr-img {
+  width: 124px;
+  height: 124px;
+  display: block;
+  border-radius: var(--radius-sm);
 }
 
 .footer-social-icon {
