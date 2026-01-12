@@ -202,11 +202,18 @@ class App {
     // 创建二维码弹层
     const qrPopup = document.createElement('div');
     qrPopup.className = 'footer-qr-popup';
+
     const qrImg = document.createElement('img');
     qrImg.src = qrCodeUrl;
     qrImg.alt = '公众号二维码';
     qrImg.className = 'footer-qr-img';
     qrPopup.appendChild(qrImg);
+
+    // 添加文案
+    const qrText = document.createElement('div');
+    qrText.className = 'footer-qr-text';
+    qrText.textContent = '扫码关注 公众号 咕咚同学';
+    qrPopup.appendChild(qrText);
 
     link.appendChild(qrPopup);
 

@@ -476,6 +476,14 @@ button {
   border-radius: var(--radius-sm);
 }
 
+.footer-qr-text {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: 1.4;
+}
+
 .footer-social-icon {
   width: 14px;
   height: 14px;
