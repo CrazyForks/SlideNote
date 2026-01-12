@@ -358,7 +358,7 @@ button {
 
 /* 底部页脚 */
 .note-list-footer {
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-md);
   border-top: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
 }
@@ -367,7 +367,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
   text-align: center;
 }
 
