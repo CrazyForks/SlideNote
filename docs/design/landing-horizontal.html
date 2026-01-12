@@ -127,6 +127,48 @@
       font-size: 12px;
     }
 
+    /* 语言切换器 */
+    .lang-switcher {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      display: flex;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 4px;
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .lang-btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+    }
+
+    .lang-btn:hover {
+      color: white;
+    }
+
+    /* 语言控制 */
+    [lang="zh"] .tagline-en { display: none; }
+    [lang="en"] .tagline-cn { display: none; }
+    [lang="zh"] .feature-zh { display: flex; }
+    [lang="en"] .feature-en { display: none; }
+    [lang="zh"] .feature-en { display: none; }
+    [lang="en"] .feature-zh { display: none; }
+
     /* 装饰性背景圆圈 */
     .deco-circle {
       position: fixed;
@@ -154,7 +196,13 @@
   <div class="deco-circle deco-circle-1"></div>
   <div class="deco-circle deco-circle-2"></div>
 
-  <div class="landing">
+  <!-- 语言切换器 -->
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <div class="landing" id="landing">
     <!-- 左侧：图标 + 名称 -->
     <div class="left-section">
       <div class="icon-wrapper">
@@ -192,23 +240,87 @@
       <p class="tagline-en">Slide notes, always by your side</p>
       <p class="tagline-cn">侧边笔记，常伴左右</p>
       <div class="divider"></div>
-      <div class="badge">CHROME EXTENSION</div>
+      <div class="badge" data-zh="Chrome 扩展" data-en="CHROME EXTENSION">CHROME EXTENSION</div>
 
       <div class="features">
-        <div class="feature">
+        <!-- 中文特性 -->
+        <div class="feature feature-zh">
           <div class="feature-icon">☁️</div>
           <span>云同步</span>
         </div>
-        <div class="feature">
+        <div class="feature feature-zh">
           <div class="feature-icon">⚡</div>
           <span>极简</span>
         </div>
-        <div class="feature">
+        <div class="feature feature-zh">
           <div class="feature-icon">✓</div>
           <span>随时记录</span>
+        </div>
+
+        <!-- 英文特性 -->
+        <div class="feature feature-en">
+          <div class="feature-icon">☁️</div>
+          <span>Cloud Sync</span>
+        </div>
+        <div class="feature feature-en">
+          <div class="feature-icon">⚡</div>
+          <span>Minimal</span>
+        </div>
+        <div class="feature feature-en">
+          <div class="feature-icon">✓</div>
+          <span>Always Ready</span>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    // 语言数据
+    const translations = {
+      zh: {
+        appName: 'SlideNote',
+        taglineEn: 'Slide notes, always by your side',
+        taglineCn: '侧边笔记，常伴左右',
+        badge: 'Chrome 扩展'
+      },
+      en: {
+        appName: 'SlideNote',
+        taglineEn: 'Slide notes, always by your side',
+        taglineCn: '侧边笔记，常伴左右',
+        badge: 'CHROME EXTENSION'
+      }
+    };
+
+    // 当前语言
+    let currentLang = 'zh';
+
+    // 切换语言
+    function switchLanguage(lang) {
+      currentLang = lang;
+      const landing = document.getElementById('landing');
+
+      // 设置语言属性
+      landing.setAttribute('lang', lang);
+
+      // 更新按钮状态
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      // 更新 badge 文字
+      const badge = document.querySelector('.badge');
+      badge.textContent = translations[lang].badge;
+    }
+
+    // 绑定语言按钮事件
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchLanguage(btn.dataset.lang);
+      });
+    });
+
+    // 默认中文
+    switchLanguage('zh');
+  </script>
 </body>
 </html>

@@ -10,6 +10,7 @@ import { Toolbar } from './components/Toolbar.js';
 import { NoteList } from './components/NoteList.js';
 import { NoteEditor } from './components/NoteEditor.js';
 import { ConfirmDialog } from './components/ConfirmDialog.js';
+import { t } from './utils/i18n.js';
 
 /**
  * 应用类
@@ -79,7 +80,13 @@ class App {
     // 作者链接
     const authorDiv = document.createElement('div');
     authorDiv.className = 'footer-author';
-    authorDiv.innerHTML = '由 <a href="https://blog.gudong.site/" target="_blank" class="author-link">咕咚同学</a> 开发';
+    const author = t('author');
+    const developedByText = t('developedBy', [author]);
+    // 使用 lastEdited 标记作为链接插入点
+    authorDiv.innerHTML = developedByText.replace(
+      author,
+      `<a href="https://blog.gudong.site/" target="_blank" class="author-link">${author}</a>`
+    );
 
     // 社交链接
     const socialDiv = document.createElement('div');
@@ -104,7 +111,7 @@ class App {
 
     const taglineDiv = document.createElement('div');
     taglineDiv.className = 'footer-tagline';
-    taglineDiv.textContent = 'Slide notes, always by your side';
+    taglineDiv.textContent = t('tagline');
 
     appFooter.append(authorDiv, socialDiv, taglineDiv);
     footer.appendChild(appFooter);
@@ -151,9 +158,10 @@ class App {
       this.dialog.close();
     }
 
+    const noteTitle = note.title || t('unnamedNote');
     this.dialog = new ConfirmDialog({
-      title: '确认删除',
-      message: `确定删除「${note.title}」吗？<br>此操作无法撤销。`,
+      title: t('confirmDelete'),
+      message: t('deleteConfirm', [noteTitle]).replace('\\n', '<br>'),
       onConfirm: async () => {
         await this.store.deleteNote(note.id);
         this.dialog = null;

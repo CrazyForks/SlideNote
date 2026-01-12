@@ -3,6 +3,8 @@
  * 用于笔记列表的排序操作
  */
 
+import { t } from '../utils/i18n.js';
+
 /**
  * 菜单项类型定义
  * @typedef {Object} MenuItem
@@ -113,25 +115,25 @@ export class ContextMenu {
     return [
       {
         id: 'move-top',
-        label: '移动到顶部',
+        label: t('moveToTop'),
         icon: '⇧',
         disabled: isFirst || isOnlyOne,
       },
       {
         id: 'move-up',
-        label: '上移',
+        label: t('moveUp'),
         icon: '↑',
         disabled: isFirst || isOnlyOne,
       },
       {
         id: 'move-down',
-        label: '下移',
+        label: t('moveDown'),
         icon: '↓',
         disabled: isLast || isOnlyOne,
       },
       {
         id: 'move-bottom',
-        label: '移动到底部',
+        label: t('moveToBottom'),
         icon: '⇩',
         disabled: isLast || isOnlyOne,
       },
@@ -141,7 +143,7 @@ export class ContextMenu {
       },
       {
         id: 'delete',
-        label: '删除',
+        label: t('delete'),
         icon: '×',
         disabled: false,
       },

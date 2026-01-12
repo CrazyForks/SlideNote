@@ -4,6 +4,7 @@
 
 import { truncateText } from '../utils/format.js';
 import { showContextMenu } from './ContextMenu.js';
+import { t } from '../utils/i18n.js';
 
 export class NoteList {
   constructor(props = {}) {
@@ -72,7 +73,7 @@ export class NoteList {
     // 标题
     const title = document.createElement('div');
     title.className = 'note-item-title';
-    title.textContent = note.title || '未命名笔记';
+    title.textContent = note.title || t('unnamedNote');
 
     // 预览
     const preview = document.createElement('div');
@@ -99,8 +100,8 @@ export class NoteList {
     return `
       <div class="note-list-empty">
         <div class="empty-icon">📝</div>
-        <div class="empty-title">还没有笔记</div>
-        <div class="empty-desc">点击搜索栏旁的 + 创建</div>
+        <div class="empty-title">${t('emptyTitle')}</div>
+        <div class="empty-desc">${t('emptyDesc')}</div>
       </div>
     `;
   }

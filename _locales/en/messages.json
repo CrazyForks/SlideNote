@@ -1,0 +1,122 @@
+{
+  "appName": {
+    "message": "SlideNote",
+    "description": "App name"
+  },
+  "appDesc": {
+    "message": "Slide notes, always by your side",
+    "description": "App description"
+  },
+  "extensionName": {
+    "message": "Open SlideNote",
+    "description": "Extension name"
+  },
+  "newNote": {
+    "message": "New Note",
+    "description": "New note button"
+  },
+  "newNoteShort": {
+    "message": "New",
+    "description": "New note (short)"
+  },
+  "searchPlaceholder": {
+    "message": "Search notes...",
+    "description": "Search placeholder"
+  },
+  "searchTitle": {
+    "message": "Search",
+    "description": "Search button title"
+  },
+  "closeSearch": {
+    "message": "Close (ESC)",
+    "description": "Close search button"
+  },
+  "unnamedNote": {
+    "message": "Untitled Note",
+    "description": "Unnamed note title"
+  },
+  "startTyping": {
+    "message": "Start typing...",
+    "description": "Editor placeholder"
+  },
+  "saved": {
+    "message": "Saved",
+    "description": "Save status"
+  },
+  "emptyTitle": {
+    "message": "No notes yet",
+    "description": "Empty state title"
+  },
+  "emptyDesc": {
+    "message": "Click \"New Note\" to create your first note",
+    "description": "Empty state description"
+  },
+  "selectOrCreate": {
+    "message": "Select or create a note",
+    "description": "Editor empty state"
+  },
+  "confirmDelete": {
+    "message": "Confirm Delete",
+    "description": "Delete dialog title"
+  },
+  "deleteConfirm": {
+    "message": "Are you sure you want to delete \"$1$\"? This cannot be undone.",
+    "description": "Delete confirm message",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Note title"
+      }
+    }
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": "Cancel button"
+  },
+  "confirm": {
+    "message": "Delete",
+    "description": "Confirm button"
+  },
+  "moveToTop": {
+    "message": "Move to Top",
+    "description": "Context menu"
+  },
+  "moveUp": {
+    "message": "Move Up",
+    "description": "Context menu"
+  },
+  "moveDown": {
+    "message": "Move Down",
+    "description": "Context menu"
+  },
+  "moveToBottom": {
+    "message": "Move to Bottom",
+    "description": "Context menu"
+  },
+  "delete": {
+    "message": "Delete",
+    "description": "Context menu delete"
+  },
+  "author": {
+    "message": "Gudong",
+    "description": "Author"
+  },
+  "tagline": {
+    "message": "Simple notes, always by your side",
+    "description": "Tagline"
+  },
+  "developedBy": {
+    "message": "Developed by $1$",
+    "description": "Developed by",
+    "placeholders": {
+      "1": {
+        "content": "$1",
+        "example": "Gudong"
+      }
+    }
+  },
+  "lastEdited": {
+    "message": "Last edited",
+    "description": "Last edited time"
+  }
+}

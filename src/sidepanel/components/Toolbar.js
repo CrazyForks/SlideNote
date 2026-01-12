@@ -3,6 +3,8 @@
  * 包含搜索图标/搜索框 + 新建按钮
  */
 
+import { t } from '../utils/i18n.js';
+
 export class Toolbar {
   constructor(props = {}) {
     this.props = props;
@@ -74,7 +76,7 @@ export class Toolbar {
       const input = document.createElement('input');
       input.className = 'search-input';
       input.value = this.state.searchValue;
-      input.placeholder = '搜索笔记...';
+      input.placeholder = t('searchPlaceholder');
       input.oninput = (e) => {
         this.state.searchValue = e.target.value;
         this.props.bus?.emit('search:change', e.target.value);
@@ -89,7 +91,7 @@ export class Toolbar {
       const closeBtn = document.createElement('button');
       closeBtn.className = 'search-close';
       closeBtn.innerHTML = '×';
-      closeBtn.title = '关闭搜索 (ESC)';
+      closeBtn.title = t('closeSearch');
       closeBtn.onclick = () => this.collapseSearch();
 
       searchExpanded.append(icon, input, closeBtn);
@@ -102,7 +104,7 @@ export class Toolbar {
       // 搜索图标按钮
       const searchBtn = document.createElement('button');
       searchBtn.className = 'search-icon-btn';
-      searchBtn.title = '搜索';
+      searchBtn.title = t('searchTitle');
       searchBtn.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"/>
@@ -121,7 +123,7 @@ export class Toolbar {
    */
   _updateNewNoteText() {
     if (this._newNoteBtnText) {
-      this._newNoteBtnText.textContent = this.state.isSearchExpanded ? '新建' : '新建笔记';
+      this._newNoteBtnText.textContent = this.state.isSearchExpanded ? t('newNoteShort') : t('newNote');
     }
   }
 

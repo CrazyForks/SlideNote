@@ -2,195 +2,194 @@
   <img src="https://gudong.s3.bitiful.net/weimd/1768183653015_image.png" width="600" alt="SlideNote">
 </p>
 
-<h1 align="center">SlideNote 侧边笔记</h1>
+<h1 align="center">SlideNote</h1>
 
 <p align="center">
   <strong>Slide notes, always by your side</strong><br>
-  侧边笔记，常伴左右
+  <a href="README.zh-CN.md">中文介绍</a>
 </p>
 
 <p align="center">
-  Chrome 浏览器侧边栏笔记插件 | 跨设备自动同步 | 极简设计
+  A minimalist Chrome extension for quick note-taking in the browser sidebar | Auto-sync across devices | No frameworks
 </p>
 
 <p align="center">
   <a href="https://github.com/maoruibin/SlideNote"><img alt="GitHub version" src="https://img.shields.io/badge/version-0.0.1-blue"></a>
   <a href="https://github.com/maoruibin/SlideNote/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green"></a>
+  <a href="https://chromewebstore.google.com/detail/slidenote/"><img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-Ready-green"></a>
 </p>
 
 ---
 
-## ✨ 特性
+## ✨ Features
 
-- **📌 侧边栏展示** — 固定在浏览器侧边，随时可用
-- **💾 自动保存** — 停止输入 1 秒后自动保存
-- **🔄 跨设备同步** — 基于 Chrome Storage API，自动云端同步
-- **🔍 搜索过滤** — 实时搜索标题和内容
-- **📋 笔记排序** — 右键菜单，自由调整笔记顺序
-- **⚡️ 极致轻量** — 无框架依赖，打包仅 20KB
-
----
-
-## 🎯 适用场景
-
-| 场景 | 说明 |
-|------|------|
-| 多设备工作者 | 公司电脑记录，回家电脑继续用 |
-| 技术人员 | 存储 API Key、服务器地址、配置信息 |
-| 运营/自媒体 | 管理多账号密码、文案模板、素材链接 |
-| 临时记录 | 快速记下灵感、待办事项、剪贴板内容 |
+- **📌 Sidebar Panel** — Lives in your browser sidebar, always accessible
+- **💾 Auto-Save** — Saves automatically 1 second after you stop typing
+- **🔄 Cross-Device Sync** — Syncs across devices via Chrome Storage API
+- **🔍 Search** — Real-time search across note titles and content
+- **📋 Note Reordering** — Right-click to reorder your notes
+- **⚡️ Ultra Lightweight** — No frameworks, bundled size ~20KB
 
 ---
 
-## 📦 安装
+## 🎯 Use Cases
 
-### 方式一：从源码安装
+| Use Case | Description |
+|----------|-------------|
+| Multi-device Workers | Record notes at work, continue at home |
+| Developers | Store API keys, server addresses, config snippets |
+| Content Creators | Manage multiple account credentials, content templates |
+| Quick Capture | Jot down ideas, to-dos, clipboard contents |
+
+---
+
+## 📦 Installation
+
+### Option 1: Install from Source
 
 ```bash
-# 克隆仓库
+# Clone the repository
 git clone https://github.com/maoruibin/SlideNote.git
 cd SlideNote
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 构建
+# Build
 npm run build
 ```
 
-1. 打开 Chrome 浏览器
-2. 访问 `chrome://extensions/`
-3. 开启右上角的「开发者模式」
-4. 点击「加载已解压的扩展程序」
-5. 选择项目根目录的 `dist` 文件夹
+1. Open Chrome browser
+2. Go to `chrome://extensions/`
+3. Enable "Developer mode" in the top right
+4. Click "Load unpacked"
+5. Select the `dist` folder in the project directory
 
-### 方式二：Chrome 应用商店（即将上架）
+### Option 2: Chrome Web Store
 
-搜索「SlideNote」一键安装
-
----
-
-## 🚀 使用方法
-
-1. 点击 Chrome 工具栏的 SlideNote 图标
-2. 侧边栏展开，即可开始使用
-3. 点击「新建笔记」创建第一条笔记
-4. 点击笔记项切换，开始编辑
-5. 右键点击笔记可排序或删除
-6. 停止输入 1 秒后自动保存
+Search for "SlideNote" and install with one click.
 
 ---
 
-## 🛠️ 技术栈
+## 🚀 Usage
+
+1. Click the SlideNote icon in your Chrome toolbar
+2. The sidebar panel opens, ready to use
+3. Click "New Note" to create your first note
+4. Click a note to start editing
+5. Right-click a note to reorder or delete
+6. Auto-saves 1 second after you stop typing
+
+---
+
+## 🛠️ Tech Stack
 
 ```
-Vanilla JS (ES6+)  →  无框架，极致轻量
-Vite               →  快速构建
-Chrome Storage     →  免费云同步
-CSS Variables      →  设计系统
+Vanilla JS (ES6+)  →  No framework overhead
+Vite               →  Fast build
+Chrome Storage     →  Free cloud sync
+CSS Variables      →  Design system
 ```
 
-**为什么不用框架？**
+**Why no framework?**
 
-| 理由 | 说明 |
-|------|------|
-| 性能 | 加载时间 < 100ms，无 100KB+ 框架开销 |
-| 简单 | CRUD 功能不需要复杂状态管理 |
-| 稳定 | 无框架升级风险，代码长期可用 |
+| Reason | Description |
+|--------|-------------|
+| Performance | Load time < 100ms, no 100KB+ framework bloat |
+| Simplicity | CRUD doesn't need complex state management |
+| Stability | No framework upgrade risks, code stays working |
 
 ---
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 slidenote/
 ├── src/sidepanel/
-│   ├── core/           # 数据层（Store, EventBus, SyncManager）
-│   ├── components/     # UI 组件
-│   └── utils/          # 工具函数
-├── docs/               # 设计文档
-└── public/icons/       # 图标资源
+│   ├── core/           # Data layer (Store, EventBus, SyncManager)
+│   ├── components/     # UI components
+│   └── utils/          # Utility functions
+├── docs/               # Documentation
+└── public/icons/       # Icon resources
 ```
 
 ---
 
-## 🎨 设计理念
+## 🎨 Design Philosophy
 
 ```
-克制的配色    → 单色主调，不抢注意力
-清晰的层级    → 列表 vs 内容，一目了然
-舒适的间距    → 呼吸感，不拥挤
-统一的圆角    → 温和不尖锐
+Restrained colors   →  Single-tone, non-distracting
+Clear hierarchy     →  List vs content, at a glance
+Comfortable spacing →  Room to breathe
+Consistent rounded  →  Gentle, not sharp
 ```
 
 ---
 
-## 🗺️ 路线图
+## 🗺️ Roadmap
 
-### v0.0.1（当前版本）
-- [x] 基础 CRUD
-- [x] 自动保存
-- [x] 跨设备同步
-- [x] 搜索过滤
-- [x] 笔记排序（右键菜单）
-- [x] UI 优化（自适应宽度、移除聚焦边框）
+### v0.0.1 (Current)
+- [x] Basic CRUD
+- [x] Auto-save
+- [x] Cross-device sync
+- [x] Search & filter
+- [x] Note reordering
+- [x] UI polish
 
-### v0.0.2（计划中）
-- [ ] 笔记分组/标签
-- [ ] 数据导出（JSON/Markdown）
-- [ ] 快捷键支持
+### v0.0.2 (Planned)
+- [ ] Note grouping/tags
+- [ ] Data export (JSON/Markdown)
+- [ ] Keyboard shortcuts
 
 ---
 
-## 📮 关注作者
+## 📮 Follow the Author
 
 <p align="center">
-  扫码关注公众号，获取开发日常和产品最新动态
+  Scan to follow my WeChat Official Account for development updates
 </p>
 
 <p align="center">
-  <img src="https://blog.gudong.site/assets/profile/gongzhonghao.jpg" width="180" alt="公众号二维码">
+  <img src="https://blog.gudong.site/assets/profile/gongzhonghao.jpg" width="180" alt="WeChat QR">
 </p>
 
 ---
 
-## 💖 感谢支持
+## 💖 Support
 
-如果这个项目对你有帮助，欢迎请我喝杯咖啡 ☕️
+If this project helps you, buy me a coffee ☕️
 
 <table align="center">
   <tr>
     <td align="center">
-      <img src="https://doc.gudong.site/assets/img/wechat-donate.5e615ccb.jpg" width="180" alt="微信打赏"/>
+      <img src="https://doc.gudong.site/assets/img/wechat-donate.5e615ccb.jpg" width="180" alt="WeChat Pay"/>
     </td>
     <td align="center">
-      <img src="https://doc.gudong.site/assets/img/alipay-donate.7ec06101.jpg" width="180" alt="支付宝打赏"/>
+      <img src="https://doc.gudong.site/assets/img/alipay-donate.7ec06101.jpg" width="180" alt="Alipay"/>
     </td>
   </tr>
 </table>
 
 ---
 
-## 🌟 更多作品
+## 🌟 More Works
 
-查看我的更多项目和文章：**[doc.gudong.site](https://doc.gudong.site/)**
+Check out my other projects: **[doc.gudong.site](https://doc.gudong.site/)**
 
 ---
 
-## 📄 开源协议
+## 📄 License
 
 [MIT License](LICENSE)
 
 ---
 
-## 👨‍💻 作者
+## 👨‍💻 Author
 
-**咕咚同学** | 博客: https://blog.gudong.site/
+**Gudong** | Blog: https://blog.gudong.site/
 
 > **Slide notes, always by your side**
->
-> 侧边笔记，常伴左右
 
 ---
 
-如果这个项目对你有帮助，请给个 ⭐ Star 支持一下！
+If you find this project helpful, please give it a ⭐ Star!

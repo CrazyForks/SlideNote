@@ -11,6 +11,8 @@
  * dialog.show();
  */
 
+import { t } from '../utils/i18n.js';
+
 export class ConfirmDialog {
   constructor(props = {}) {
     this.props = props;
@@ -48,7 +50,7 @@ export class ConfirmDialog {
     // 标题
     const title = document.createElement('div');
     title.className = 'dialog-title';
-    title.textContent = this.props.title || '确认操作';
+    title.textContent = this.props.title || t('confirmDelete');
 
     // 消息
     const message = document.createElement('div');
@@ -61,12 +63,12 @@ export class ConfirmDialog {
 
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'dialog-btn dialog-btn-cancel';
-    cancelBtn.textContent = '取消';
+    cancelBtn.textContent = t('cancel');
     cancelBtn.onclick = () => this.close();
 
     const confirmBtn = document.createElement('button');
     confirmBtn.className = 'dialog-btn dialog-btn-confirm';
-    confirmBtn.textContent = `确认 (${this.countdown})`;
+    confirmBtn.textContent = `${t('confirm')} (${this.countdown})`;
     confirmBtn.disabled = true;
 
     buttons.append(cancelBtn, confirmBtn);
@@ -92,13 +94,13 @@ export class ConfirmDialog {
       if (count <= 0) {
         clearInterval(this.timer);
         this._confirmBtn.disabled = false;
-        this._confirmBtn.textContent = '确认';
+        this._confirmBtn.textContent = t('confirm');
         this._confirmBtn.onclick = () => {
           this.props.onConfirm?.();
           this.close();
         };
       } else {
-        this._confirmBtn.textContent = `确认 (${count})`;
+        this._confirmBtn.textContent = `${t('confirm')} (${count})`;
       }
     }, 1000);
   }

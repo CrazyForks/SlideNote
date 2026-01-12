@@ -3,6 +3,7 @@
  */
 
 import { formatRelativeTime } from '../utils/format.js';
+import { t } from '../utils/i18n.js';
 
 export class NoteEditor {
   constructor(props = {}) {
@@ -34,7 +35,7 @@ export class NoteEditor {
     const titleInput = document.createElement('input');
     titleInput.className = 'note-title-input';
     titleInput.value = this.state.note.title;
-    titleInput.placeholder = '未命名笔记';
+    titleInput.placeholder = t('unnamedNote');
     titleInput.oninput = (e) => {
       this._saveDebounced(this.state.note.id, { title: e.target.value });
     };
@@ -48,7 +49,7 @@ export class NoteEditor {
 
     const saveStatus = document.createElement('span');
     saveStatus.className = 'note-save-status';
-    saveStatus.innerHTML = '✓ 已保存';
+    saveStatus.innerHTML = `✓ ${t('saved')}`;
 
     meta.append(timeDisplay, saveStatus);
     header.append(titleInput, meta);
@@ -60,7 +61,7 @@ export class NoteEditor {
     const textarea = document.createElement('textarea');
     textarea.className = 'note-content-textarea';
     textarea.value = this.state.note.content;
-    textarea.placeholder = '开始输入...';
+    textarea.placeholder = t('startTyping');
     textarea.oninput = (e) => {
       this._saveDebounced(this.state.note.id, { content: e.target.value });
     };
@@ -95,8 +96,7 @@ export class NoteEditor {
     return `
       <div class="editor-empty">
         <div class="empty-icon">📄</div>
-        <div class="empty-title">选择或创建一条笔记</div>
-        <div class="empty-desc">开始编辑你的第一条笔记</div>
+        <div class="empty-title">${t('selectOrCreate')}</div>
       </div>
     `;
   }

@@ -26,6 +26,25 @@ try {
   }
   console.log(`✓ Copied ${files.filter(f => f.endsWith('.svg')).length} icon files`);
 
+  // 3.5. 复制 _locales 目录（国际化文件）
+  const srcLocalesDir = join(__dirname, '..', '_locales');
+  const dstLocalesDir = join(distDir, '_locales');
+  const copyLocaleDir = (src, dst) => {
+    mkdirSync(dst, { recursive: true });
+    const entries = readdirSync(src, { withFileTypes: true });
+    for (const entry of entries) {
+      const srcPath = join(src, entry.name);
+      const dstPath = join(dst, entry.name);
+      if (entry.isDirectory()) {
+        copyLocaleDir(srcPath, dstPath);
+      } else {
+        copyFileSync(srcPath, dstPath);
+      }
+    }
+  };
+  copyLocaleDir(srcLocalesDir, dstLocalesDir);
+  console.log('✓ Copied _locales directory');
+
   // 4. 重命名 JS 和 CSS 文件
   renameSync(join(distDir, 'index.js'), join(distDir, 'sidepanel.js'));
   renameSync(join(distDir, 'index.css'), join(distDir, 'sidepanel.css'));
@@ -61,7 +80,8 @@ try {
   console.log('  ├── sidepanel.html');
   console.log('  ├── sidepanel.js');
   console.log('  ├── sidepanel.css');
-  console.log('  └── icons/');
+  console.log('  ├── icons/');
+  console.log('  └── _locales/');
 } catch (err) {
   console.error('Error:', err);
   process.exit(1);
