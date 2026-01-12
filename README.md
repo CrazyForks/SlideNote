@@ -154,6 +154,33 @@ slidenote/
 
 ---
 
+## 💖 感谢支持
+
+如果这个项目对你有帮助，欢迎请我喝杯咖啡 ☕️
+
+<table align="center">
+  <tr>
+    <th align="center">微信打赏</th>
+    <th align="center">支付宝打赏</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://doc.gudong.site/assets/img/wechat-donate.5e615ccb.jpg" width="180" alt="微信打赏"/>
+    </td>
+    <td align="center">
+      <img src="https://doc.gudong.site/assets/img/alipay-donate.7ec06101.jpg" width="180" alt="支付宝打赏"/>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 🌟 更多作品
+
+查看我的更多项目和文章：**[doc.gudong.site](https://doc.gudong.site/)**
+
+---
+
 ## 📄 开源协议
 
 [MIT License](LICENSE)
