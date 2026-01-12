@@ -164,17 +164,17 @@ class App {
    * 创建社交链接
    * @private
    */
-  _createSocialLink(href, title, iconPath) {
+  _createSocialLink(href, tooltip, iconPath) {
     const link = document.createElement('a');
     link.href = href;
     link.target = '_blank';
     link.className = 'footer-social-link';
-    link.title = title;
+    link.setAttribute('data-tooltip', tooltip);
 
     // 创建图片元素加载 SVG
     const img = document.createElement('img');
     img.src = iconPath;
-    img.alt = title;
+    img.alt = tooltip;
     img.className = 'footer-social-icon';
     link.appendChild(img);
 
