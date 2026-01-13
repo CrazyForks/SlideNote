@@ -1,33 +1,19 @@
 # SlideNote v0.0.2 版本文档
 
 > **侧边笔记，常伴左右**
-> **状态**: 开发中
+> **状态**: 已发布 ✅
 
 ---
 
 ## 版本概述
 
-v0.0.2 版本在 v0.0.1 MVP 基础上，增加数据归档和导出功能，解决 Chrome Storage 容量限制问题。
+v0.0.2 版本在 v0.0.1 MVP 基础上，优化用户体验，新增侧边栏折叠和输入交互优化。
 
 ### 主要目标
 
-- 解决 Chrome Storage Sync 100KB 容量限制
-- 提供数据备份和导出能力
-- 优化现有功能体验
-
----
-
-## 目录结构
-
-```
-v0.0.2/
-├── README.md              # 本文件
-├── bugs/                  # Bug 修复
-├── features/              # 新功能
-│   ├── archive-storage/   # 存储归档功能
-│   └── export-data/       # 数据导出功能
-└── optimizations/         # 体验优化
-```
+- 提升编辑体验，减少操作步骤
+- 增加侧边栏折叠功能，最大化编辑空间
+- 完善开发流程，区分开发/生产构建
 
 ---
 
@@ -35,48 +21,35 @@ v0.0.2/
 
 | 类型 | 名称 | 优先级 | 状态 | 文档 |
 |------|------|--------|------|------|
-| 新功能 | 数据导出 | P0 | 设计中 | [PRD](./features/export-data/PRD.md) \| [Tech](./features/export-data/Tech-Spec.md) \| [UI](./features/export-data/UI-Spec.md) |
-| 优化 | (待添加) | - | - | - |
-| Bug | (待添加) | - | - | - |
+| 新功能 | 侧边栏折叠/展开 | P0 | ✅ 已实现 | [PRD](./features/sidebar-collapse.md) |
+| 优化 | 新建笔记自动聚焦标题 | P0 | ✅ 已实现 | [Tech-Spec](./optimizations/title-focus-tech-spec.md) |
+| 优化 | Tab键切换焦点 | P1 | ✅ 已实现 | [Tech-Spec](./optimizations/title-focus-tech-spec.md) |
+| 优化 | 按钮样式优化 | P2 | ✅ 已实现 | [UI优化清单](./optimizations/UI-optimization.md) |
 
 ---
 
-## 新增功能详情
+## 已实现功能详情
 
-### 存储归档 (archive-storage)
+### 侧边栏折叠/展开
 
-将不常用的旧笔记归档到 `storage.local`，释放 sync 存储空间。
+- **设计**: 分隔线上的微型控制器
+- **功能**:
+  - 点击右边缘中央的收起按钮折叠侧边栏
+  - 折叠后侧边栏宽度从 180px 变为 40px
+  - 折叠状态点击中央圆形按钮展开
+  - 新建笔记或搜索时自动展开
+  - 状态持久化到 Chrome Storage
 
-- **问题**: Chrome Storage Sync 只有 100KB 容量
-- **方案**: 手动/自动归档旧笔记到 local 存储
-- **文档**: [PRD](./features/archive-storage/PRD.md)
+### 新建笔记自动聚焦标题
 
-### 数据导出 (export-data)
+- **功能**: 创建新笔记时自动聚焦标题输入框
+- **优化**: 用户可直接输入标题，无需手动点击
+- **交互**: Tab 键在标题和内容之间快速切换
 
-支持将笔记导出为 JSON 或 Markdown 格式，方便备份和迁移。
+### 开发/生产构建分离
 
-- **格式**: JSON（完整备份）、Markdown（方便查看）
-- **范围**: 全部笔记、当前笔记、归档笔记
-- **文档**: [PRD](./features/export-data/PRD.md) | [Tech-Spec](./features/export-data/Tech-Spec.md)
-
----
-
-## 文档规范
-
-### 新建需求文档流程
-
-1. 确定需求类型（bug / feature / optimization）
-2. 在对应目录创建文件夹
-3. 复制模板并填写内容：
-   - `PRD.md` - 产品需求文档
-   - `Tech-Spec.md` - 技术方案文档（可选）
-   - `UI-Spec.md` - UI 设计文档（如需要）
-4. 更新本 README 的功能清单
-
-### 文档模板
-
-- [PRD 模板](../../_templates/PRD-Template.md)
-- [Tech-Spec 模板](../../_templates/Tech-Spec-Template.md)
+- **开发版**: 橙色图标，名称显示 "Dev"，可同时安装
+- **生产版**: 深色图标，标准名称
 
 ---
 
@@ -84,4 +57,15 @@ v0.0.2/
 
 | 日期 | 变更内容 |
 |------|----------|
-| 2025-01-12 | 初始版本，建立目录结构和文档规范；完善导出功能 PRD |
+| 2025-01-13 | 版本发布：侧边栏折叠 + 输入优化 |
+| 2025-01-12 | 初始版本规划（原计划：数据导出和归档）|
+
+---
+
+## 移至下版本
+
+以下功能已移至 v0.0.3 版本：
+
+- Markdown 编辑器
+- 数据导出（JSON/MD）
+- 存储归档
