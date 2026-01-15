@@ -5,7 +5,7 @@
 <h1 align="center">SlideNote</h1>
 
 <p align="center">
-  <strong>Simple notes, always by your side</strong><br>
+  <strong>Slide notes, always by your side</strong><br>
   <strong>侧边笔记，常伴左右</strong><br>
   <a href="README.zh-CN.md">中文介绍</a>
 </p>
@@ -205,7 +205,7 @@ Check out my other projects: **[doc.gudong.site](https://doc.gudong.site/)**
 
 **Gudong** | Blog: https://blog.gudong.site/
 
-> **Simple notes, always by your side**
+> **Slide notes, always by your side**
 > **侧边笔记，常伴左右**
 
 ---

@@ -1,6 +1,6 @@
 # SlideNote 变更日志
 
-> **Simple notes, always by your side**
+> **Slide notes, always by your side**
 > **侧边笔记，常伴左右**
 
 ---

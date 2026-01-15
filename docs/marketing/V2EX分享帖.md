@@ -4,7 +4,7 @@
 
 ---
 
-> **Simple notes, always by your side**
+> **Slide notes, always by your side**
 > **侧边笔记，常伴左右**
 
 ## 缘起
@@ -103,5 +103,5 @@ MIT License，欢迎 Star / PR / Issue
 
 ---
 
-> **Simple notes, always by your side**
+> **Slide notes, always by your side**
 > **侧边笔记，常伴左右**

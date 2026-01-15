@@ -4,7 +4,7 @@
     "description": "App name"
   },
   "appDesc": {
-    "message": "Simple notes, always by your side - Dev Build",
+    "message": "Slide notes, always by your side - Dev Build",
     "description": "App description"
   },
   "extensionName": {
@@ -102,7 +102,7 @@
     "description": "Author"
   },
   "tagline": {
-    "message": "Simple notes, always by your side",
+    "message": "Slide notes, always by your side",
     "description": "Tagline"
   },
   "developedBy": {

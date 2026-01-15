@@ -48,7 +48,7 @@
 │  │                     │  │  密码: yyy                     ││  │
 │  │  ───────────────    │  │                                 ││  │
 │  │  由咕咚同学开发     │  │  阿里云:                        ││  │
-│  │  Simple notes...    │  │  AccessKey: xxx                 ││  │
+│  │  Slide notes...    │  │  AccessKey: xxx                 ││  │
 │  │                     │  │                                 ││  │
 │  └─────────────────────┴  └─────────────────────────────────┘│  │
 │                                                                 │
@@ -225,7 +225,7 @@ textarea: line-height: 1.7; /* 编辑器行高 */
 ┌───────────────────────────────┐
 │                               │
 │   由 咕咚同学 开发            │
-│   Simple notes, always...     │
+│   Slide notes, always...     │
 │                               │
 └───────────────────────────────┘
 ```
@@ -234,7 +234,7 @@ textarea: line-height: 1.7; /* 编辑器行高 */
 
 **内容：**
 - 作者信息：「由 咕咚同学 开发」（11px，灰色）
-- Tagline：「Simple notes, always by your side」（10px，浅灰色，斜体）
+- Tagline：「Slide notes, always by your side」（10px，浅灰色，斜体）
 - GitHub 链接（预留）：作者名可点击跳转
 
 ### 4.5 删除确认弹窗

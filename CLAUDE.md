@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **Simple notes, always by your side**
+> **Si notes, always by your side**
 > **侧边笔记，常伴左右**
 
 ## Project Overview

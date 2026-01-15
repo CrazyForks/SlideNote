@@ -12,7 +12,7 @@
 | NoteEditor | 未命名笔记、开始输入...、已保存 | 编辑器 |
 | ConfirmDialog | 确认删除、取消、确认 | 删除确认 |
 | ContextMenu | 移动到顶部、上移、下移、移动到底部、删除 | 右键菜单 |
-| Footer | 由咕咚同学开发、Simple notes... | 页脚信息 |
+| Footer | 由咕咚同学开发、Slide notes... | 页脚信息 |
 
 ### 1.2 支持的语言
 
