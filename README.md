@@ -1,20 +1,21 @@
 <p align="center">
-  <img src="https://gudong.s3.bitiful.net/weimd/1768183653015_image.png" width="600" alt="SlideNote">
+  <img src="https://gudong.s3.bitiful.net/images/slidenote-marquee-en.png" width="600" alt="SlideNote">
 </p>
 
 <h1 align="center">SlideNote</h1>
 
 <p align="center">
-  <strong>Slide notes, always by your side</strong><br>
+  <strong>Simple notes, always by your side</strong><br>
+  <strong>侧边笔记，常伴左右</strong><br>
   <a href="README.zh-CN.md">中文介绍</a>
 </p>
 
 <p align="center">
-  A minimalist Chrome extension for quick note-taking in the browser sidebar | Auto-sync across devices | No frameworks
+  A sticky note in your browser sidebar — quick capture for fragments, never blocks content
 </p>
 
 <p align="center">
-  <a href="https://github.com/maoruibin/SlideNote"><img alt="GitHub version" src="https://img.shields.io/badge/version-0.0.1-blue"></a>
+  <a href="https://github.com/maoruibin/SlideNote"><img alt="GitHub version" src="https://img.shields.io/badge/version-0.0.4-blue"></a>
   <a href="https://github.com/maoruibin/SlideNote/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green"></a>
   <a href="https://chromewebstore.google.com/detail/appaojacakbjbbellfehlgjophpdpjom"><img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-Online-green"></a>
 </p>
@@ -23,23 +24,25 @@
 
 ## ✨ Features
 
-- **📌 Sidebar Panel** — Lives in your browser sidebar, always accessible
+- **📌 Sidebar Panel, Never Blocks Content** — Lives in your browser sidebar, always accessible without covering your page
+- **⚡️ Instant Access** — Opens in < 100ms, no app switching needed
+- **🔄 Auto-Sync Across Devices** — Uses Chrome Storage API, your fragments follow you everywhere
+- **🔍 Instant Search** — Real-time filter across all notes
+- **📝 Markdown Support** — Basic formatting for keys, commands, and code
 - **💾 Auto-Save** — Saves automatically 1 second after you stop typing
-- **🔄 Cross-Device Sync** — Syncs across devices via Chrome Storage API
-- **🔍 Search** — Real-time search across note titles and content
-- **📋 Note Reordering** — Right-click to reorder your notes
-- **⚡️ Ultra Lightweight** — No frameworks, bundled size ~20KB
 
 ---
 
 ## 🎯 Use Cases
 
-| Use Case | Description |
-|----------|-------------|
-| Multi-device Workers | Record notes at work, continue at home |
-| Developers | Store API keys, server addresses, config snippets |
-| Content Creators | Manage multiple account credentials, content templates |
-| Quick Capture | Jot down ideas, to-dos, clipboard contents |
+| Use Case | Examples |
+|----------|----------|
+| Developers | API keys, server addresses,常用 commands, database credentials |
+| Multi-device Workers | Company Mac + Home Mac + Laptop — access the same fragments everywhere |
+| Content Creators | Account credentials, content templates, prompts for AI tools |
+| Daily Fragments | IP addresses, meeting notes, to-do lists, quick reminders |
+
+**It's not a note-taking app.** Think of it as a cloud clipboard for the small pieces of information you need to access quickly while browsing.
 
 ---
 
@@ -111,8 +114,8 @@ CSS Variables      →  Design system
 | Reason | Description |
 |--------|-------------|
 | Performance | Load time < 100ms, no 100KB+ framework bloat |
-| Simplicity | CRUD doesn't need complex state management |
-| Stability | No framework upgrade risks, code stays working |
+| Simplicity | A fragment keeper doesn't need complex state management |
+| Stability | No framework upgrade risks — code that works today still works years from now |
 
 ---
 
@@ -144,26 +147,16 @@ Consistent rounded  →  Gentle, not sharp
 ## 🗺️ Roadmap
 
 ### v0.0.3 (Current)
-- [x] Markdown editor with preview mode
-- [x] Copy as rich text (with styling)
-- [x] Copy as Markdown source
-- [x] Navigation arrows (prev/next note)
-- [x] Per-note view mode memory
-- [x] Syntax help modal
-- [x] All v0.0.1 features
-
-### v0.0.2
-- [x] Basic CRUD
-- [x] Auto-save
-- [x] Cross-device sync
-- [x] Search & filter
-- [x] Note reordering
-- [x] UI polish
+- [x] Sidebar panel, never blocks content
+- [x] Instant search & filter
+- [x] Auto-save & cross-device sync
+- [x] Basic Markdown support (preview mode)
+- [x] Copy as rich text or Markdown source
 
 ### v0.0.4 (Planned)
-- [ ] Note grouping/tags
 - [ ] Data export (JSON/Markdown)
 - [ ] Keyboard shortcuts
+- [ ] Dark mode
 
 ---
 
@@ -212,7 +205,8 @@ Check out my other projects: **[doc.gudong.site](https://doc.gudong.site/)**
 
 **Gudong** | Blog: https://blog.gudong.site/
 
-> **Slide notes, always by your side**
+> **Simple notes, always by your side**
+> **侧边笔记，常伴左右**
 
 ---
 
