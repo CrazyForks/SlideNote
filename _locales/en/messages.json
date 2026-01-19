@@ -178,5 +178,17 @@
   "previewNote": {
     "message": "Preview",
     "description": "Preview note button"
+  },
+  "feedback": {
+    "message": "Feedback",
+    "description": "Feedback link"
+  },
+  "feedbackTitle": {
+    "message": "Submit feedback to help us improve",
+    "description": "Feedback link tooltip"
+  },
+  "viewSource": {
+    "message": "View Source",
+    "description": "View source link tooltip"
   }
 }

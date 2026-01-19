@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>侧边栏折叠状态原型 - v0.0.6</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* 色彩 */
+      --color-bg-primary: #ffffff;
+      --color-bg-secondary: #f5f5f5;
+      --color-bg-hover: #e8e8e8;
+      --color-bg-active: #f0f7ff;
+      --color-text-primary: #1a1a1a;
+      --color-text-secondary: #666666;
+      --color-text-tertiary: #999999;
+      --color-text-placeholder: #bbbbbb;
+      --color-border: #e5e5e5;
+      --color-primary: #0066cc;
+      --color-primary-light: #f0f7ff;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --radius-md: 6px;
+      --spacing-sm: 6px;
+      --spacing-md: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    h1 {
+      font-size: 20px;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    /* 原型容器 */
+    .prototype-wrapper {
+      display: flex;
+      gap: 60px;
+      align-items: flex-start;
+    }
+
+    .prototype-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+    }
+
+    .section-dims {
+      font-size: 12px;
+      color: #999;
+    }
+
+    /* ==================== 展开状态 (180px) ==================== */
+    .app-expanded {
+      width: 480px;
+      height: 420px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      overflow: hidden;
+    }
+
+    .sidebar-expanded {
+      width: 180px;
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      height: 44px;
+      background: var(--color-bg-primary);
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      flex: 1;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .search-icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-md);
+      font-size: 16px;
+    }
+
+    .btn-new-note {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      height: 32px;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 500;
+      background: transparent;
+    }
+
+    .btn-new-note svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* 收起按钮（展开状态，在 toolbar 右侧） */
+    .collapse-btn-inline {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-tertiary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      background: white;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .collapse-btn-inline:hover {
+      background: var(--color-bg-hover);
+      color: var(--color-text-secondary);
+    }
+
+    .collapse-btn-inline svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* 笔记列表 */
+    .note-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-sm);
+    }
+
+    .note-item {
+      position: relative;
+      padding: var(--spacing-sm) var(--spacing-md);
+      margin-bottom: 2px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .note-item:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .note-item.active {
+      background: var(--color-bg-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .note-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .note-item-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .note-item-preview {
+      font-size: 10px;
+      color: var(--color-text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    /* 底部页脚 */
+    .note-list-footer {
+      padding: 18px 12px;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-bg-secondary);
+    }
+
+    .app-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .footer-author {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .footer-author a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-tagline {
+      font-size: 10px;
+      color: var(--color-text-tertiary);
+      font-style: italic;
+    }
+
+    .content-area {
+      flex: 1;
+      background: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    /* ==================== 折叠状态 (90px) ==================== */
+    .app-collapsed {
+      width: 390px;
+      height: 420px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      overflow: hidden;
+    }
+
+    .sidebar-collapsed {
+      width: 90px;
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* 折叠状态：顶部按钮区域 */
+    .sidebar-collapsed .top-actions {
+      padding: 8px 6px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      background: var(--color-bg-secondary);
+    }
+
+    /* 新建按钮 */
+    .new-btn-collapsed {
+      width: 36px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      background: white;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .new-btn-collapsed:hover {
+      background: var(--color-primary-light);
+    }
+
+    .new-btn-collapsed svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* 展开按钮 */
+    .expand-btn-small {
+      width: 36px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-tertiary);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      background: white;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .expand-btn-small:hover {
+      background: var(--color-bg-hover);
+      color: var(--color-text-secondary);
+    }
+
+    .expand-btn-small svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* 笔记列表 */
+    .sidebar-collapsed .note-list {
+      padding: 6px 4px;
+    }
+
+    .sidebar-collapsed .note-item {
+      padding: 8px 4px;
+      margin-bottom: 2px;
+      border-radius: var(--radius-md);
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-collapsed .note-item:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .sidebar-collapsed .note-item-preview {
+      display: none;
+    }
+
+    /* 标题水平显示（截断） */
+    .sidebar-collapsed .note-item-title {
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      line-height: 1.4;
+      width: 100%;
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+
+    /* 选中时左侧蓝条 */
+    .sidebar-collapsed .note-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-collapsed .note-item.active {
+      background: var(--color-bg-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 隐藏不需要的元素 */
+    .sidebar-collapsed .toolbar,
+    .sidebar-collapsed .footer {
+      display: none;
+    }
+
+    /* ==================== 滚动条样式 ==================== */
+    .note-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .note-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .note-list::-webkit-scrollbar-thumb {
+      background: #d0d0d0;
+      border-radius: 2px;
+    }
+
+    /* 说明区域 */
+    .notes {
+      max-width: 600px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #666;
+    }
+
+    .notes h3 {
+      font-size: 15px;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+
+    .notes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .notes li {
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .notes li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: #0066cc;
+    }
+
+    .highlight {
+      background: #f0f7ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #0066cc;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div style="text-align: center;">
+    <h1>侧边栏折叠状态原型</h1>
+    <p class="subtitle">SlideNote v0.0.6 - 侧边栏折叠优化</p>
+  </div>
+
+  <!-- 原型展示区 -->
+  <div class="prototype-wrapper">
+    <!-- 展开状态 -->
+    <div class="prototype-section">
+      <span class="section-title">展开状态</span>
+      <span class="section-dims">180px</span>
+      <div class="app-expanded">
+        <div class="sidebar-expanded">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <span class="search-icon-btn">🔍</span>
+              <button class="btn-new-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                <span>新建</span>
+              </button>
+            </div>
+            <div class="toolbar-right">
+              <div class="collapse-btn-inline" title="收起侧边栏">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="11 17 6 12 11 7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="note-list">
+            <div class="note-item active">
+              <div class="note-item-title">AI 提示词模板</div>
+              <div class="note-item-preview">用于 DeepSeek 写作的提示词...</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">常用 Git 命令</div>
+              <div class="note-item-preview">git rebase -i HEAD~3...</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">服务器地址</div>
+              <div class="note-item-preview">192.168.1.100 admin...</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">API Key 列表</div>
+              <div class="note-item-preview">OpenAI: sk-xxx...</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">会议记录模板</div>
+              <div class="note-item-preview">参会人员、议程...</div>
+            </div>
+          </div>
+          <div class="note-list-footer">
+            <div class="app-footer">
+              <div class="footer-author">
+                developed by <a href="#">咕咚同学</a>
+              </div>
+              <div class="footer-tagline">Si notes, always by your side</div>
+            </div>
+          </div>
+        </div>
+        <div class="content-area">
+          笔记内容编辑区
+        </div>
+      </div>
+    </div>
+
+    <!-- 折叠状态 -->
+    <div class="prototype-section">
+      <span class="section-title">折叠状态</span>
+      <span class="section-dims">90px</span>
+      <div class="app-collapsed">
+        <div class="sidebar-collapsed">
+          <!-- 顶部按钮区域：新建 + 展开 -->
+          <div class="top-actions">
+            <div class="new-btn-collapsed">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </div>
+            <div class="expand-btn-small">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 14 12 9 7"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 笔记列表 -->
+          <div class="note-list">
+            <div class="note-item active">
+              <div class="note-item-title">AI 提示词...</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">Git 命令</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">服务器地址</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">API Keys</div>
+            </div>
+            <div class="note-item">
+              <div class="note-item-title">会议记录...</div>
+            </div>
+          </div>
+        </div>
+        <div class="content-area">
+          笔记内容编辑区
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设计说明 -->
+  <div class="notes">
+    <h3>设计说明 - 方案 A：按钮位置一致</h3>
+    <ul>
+      <li><span class="highlight">宽度调整</span>：72px → 90px</li>
+      <li><span class="highlight">按钮位置一致</span>：展开/收起按钮都在顶部，形成固定肌肉记忆</li>
+      <li><span class="highlight">展开状态</span>：收起按钮在 toolbar 右侧，与搜索、新建按钮在同一行</li>
+      <li><span class="highlight">折叠状态</span>：新建 + 展开按钮水平排列在顶部</li>
+      <li><span class="highlight">隐藏内容</span>：折叠时搜索、底部信息隐藏</li>
+      <li><span class="highlight">水平标题</span>：标题水平显示，超长用省略号截断</li>
+      <li><span class="highlight">选中效果</span>：左侧蓝色指示条（3px）+ 白色背景 + 阴影</li>
+    </ul>
+  </div>
+
+  <!-- 交互说明 -->
+  <div class="notes">
+    <h3>交互规则</h3>
+    <ul>
+      <li><strong>点击折叠按钮</strong>：展开 → 折叠</li>
+      <li><strong>点击展开按钮</strong>：折叠 → 展开</li>
+      <li><strong>折叠时点击笔记</strong>：正常切换笔记内容，保持在折叠状态</li>
+      <li><strong>折叠时点击新建</strong>：创建新笔记，自动展开侧边栏</li>
+      <li><strong>状态持久化</strong>：刷新后保持折叠/展开状态</li>
+    </ul>
+  </div>
+
+</body>
+</html>

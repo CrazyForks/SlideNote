@@ -9,79 +9,72 @@
 docs/
 ├── README.md                 # 本文件
 ├── CHANGELOG.md             # 版本更新日志
+├── planning/                # 需求讨论（临时，未纳入版本）
 ├── _templates/              # 文档模板
 │   ├── PRD-Template.md      # PRD 模板
 │   └── Tech-Spec-Template.md # 技术方案模板
-└── versions/
+├── design/                  # 设计资源（landing page, 图标等）
+├── marketing/               # 营销素材
+└── versions/                # 版本文档
     ├── v0.0.1/              # MVP 版本
-    │   ├── requirements/    # 需求文档
-    │   ├── ui-design/       # UI 设计
-    │   ├── tech-design/     # 技术方案
-    │   └── i18n/            # 国际化方案
-    └── v0.0.2/              # 归档和导出版本
-        ├── bugs/            # Bug 修复
-        ├── features/        # 新功能
-        └── optimizations/   # 体验优化
+    ├── v0.0.2/              # 归档和导出版本
+    ├── v0.0.3/              # Markdown 编辑器版本
+    └── v0.0.6/              # 开发中（收藏功能 + 侧边栏优化）
 ```
 
 ## 版本管理规范
 
-### v0.0.1 及之前
-
 每个版本文件夹包含：
-- **requirements/**: 产品需求文档 (PRD)
-- **ui-design/**: UI 设计稿、交互说明
-- **tech-design/**: 技术方案、API 设计、数据结构
-
-### v0.0.2 及之后
-
-每个需求按类型分类，独立建文件夹：
 
 ```
 vX.X.X/
 ├── README.md                # 版本概述
+├── features/                # 新功能
+│   └── {feature-name}/
+│       ├── PRD.md           # 产品需求文档
+│       ├── UI-Spec.md       # UI 设计规范
+│       ├── Tech-Spec.md     # 技术实现方案
+│       └── prototype.html   # 交互原型（可选）
 ├── bugs/                    # Bug 修复
 │   └── {bug-name}/
 │       ├── PRD.md
-│       ├── Tech-Spec.md
-│       └── UI-Spec.md (可选)
-├── features/                # 新功能
-│   └── {feature-name}/
-│       ├── PRD.md
-│       ├── Tech-Spec.md
-│       └── UI-Spec.md (可选)
+│       └── Tech-Spec.md
 └── optimizations/           # 体验优化
     └── {opt-name}/
         ├── PRD.md
-        ├── Tech-Spec.md
-        └── UI-Spec.md (可选)
+        └── Tech-Spec.md
 ```
-
-### 新建需求文档流程
-
-1. 确定需求类型（bug / feature / optimization）
-2. 在对应目录创建文件夹
-3. 复制模板并填写内容
-4. 更新版本 README.md
 
 ## 版本历史
 
 | 版本 | 日期 | 状态 | 说明 |
 |------|------|------|------|
-| v0.0.1 | 2025-01-11 | 已完成 | MVP 版本：基础笔记功能 |
-| v0.0.2 | 2025-01-12 | 开发中 | 存储归档 + 数据导出 |
+| v0.0.6 | 2025-01-18 | 开发中 | 收藏功能 + 侧边栏窄化优化 |
+| v0.0.5 | 2025-01-15 | 已发布 | Bug 修复 + 小优化 |
+| v0.0.4 | 2025-01-12 | 已发布 | 小版本更新 |
+| v0.0.3 | 2025-01-11 | 已发布 | Markdown 编辑器 |
+| v0.0.2 | 2025-01-12 | 已发布 | 存储归档 + 数据导出 |
+| v0.0.1 | 2025-01-11 | 已发布 | MVP 版本：基础笔记功能 |
 
 ## 快速导航
 
-### 当前版本
+### 当前开发版本
 
-- [v0.0.2 归档和导出](./versions/v0.0.2/) - 正在开发的版本
+- [v0.0.6 收藏功能 + 侧边栏优化](./versions/v0.0.6/) - 开发中
 
 ### 历史版本
 
-- [v0.0.1 MVP](./versions/v0.0.1/) - 基础笔记功能
+- [v0.0.5](./versions/v0.0.5/) - Bug 修复
+- [v0.0.4](./versions/v0.0.4/) - 小版本更新
+- [v0.0.3](./versions/v0.0.3/) - Markdown 编辑器
+- [v0.0.2](./versions/v0.0.2/) - 存储归档 + 数据导出
+- [v0.0.1](./versions/v0.0.1/) - MVP 基础笔记功能
 
-### 模板
+### 文档模板
 
 - [PRD 模板](./_templates/PRD-Template.md)
 - [Tech-Spec 模板](./_templates/Tech-Spec-Template.md)
+
+### 工作流程
+
+详细工作流程请参考：[项目根目录 / WORKFLOW.md](../../WORKFLOW.md)

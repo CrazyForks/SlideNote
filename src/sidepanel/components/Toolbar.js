@@ -1,6 +1,6 @@
 /**
  * Toolbar - 顶部工具栏组件
- * 包含搜索图标/搜索框 + 新建按钮
+ * 包含搜索图标/搜索框 + 新建按钮 + 收起按钮
  */
 
 import { t } from '../utils/i18n.js';
@@ -23,13 +23,40 @@ export class Toolbar {
     const container = document.createElement('div');
     container.className = 'toolbar';
 
-    // 搜索区域容器（用于后续更新）
+    // 左侧区域：搜索 + 新建
+    const leftArea = document.createElement('div');
+    leftArea.className = 'toolbar-left';
+
+    // 搜索区域容器
     this._searchContainer = document.createElement('div');
     this._searchContainer.className = 'search-container';
     this._renderSearchArea(this._searchContainer);
-    container.appendChild(this._searchContainer);
+    leftArea.appendChild(this._searchContainer);
 
     // 新建笔记按钮
+    const newNoteBtn = this._renderNewNoteButton();
+    leftArea.appendChild(newNoteBtn);
+
+    container.appendChild(leftArea);
+
+    // 右侧区域：收起按钮
+    const rightArea = document.createElement('div');
+    rightArea.className = 'toolbar-right';
+
+    const collapseBtn = this._renderCollapseButton();
+    rightArea.appendChild(collapseBtn);
+
+    container.appendChild(rightArea);
+
+    this.el = container;
+    return container;
+  }
+
+  /**
+   * 渲染新建按钮
+   * @private
+   */
+  _renderNewNoteButton() {
     const newNoteBtn = document.createElement('button');
     newNoteBtn.className = 'btn-new-note';
     newNoteBtn.innerHTML = `
@@ -43,11 +70,26 @@ export class Toolbar {
     newNoteBtn.onclick = () => {
       this.props.bus?.emit('note:create');
     };
+    return newNoteBtn;
+  }
 
-    container.appendChild(newNoteBtn);
-
-    this.el = container;
-    return container;
+  /**
+   * 渲染收起按钮
+   * @private
+   */
+  _renderCollapseButton() {
+    const btn = document.createElement('div');
+    btn.className = 'collapse-btn-inline';
+    btn.title = t('collapseSidebar') || '收起侧边栏';
+    btn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="11 17 6 12 11 7"/>
+      </svg>
+    `;
+    btn.onclick = () => {
+      this.props.bus?.emit('sidebar:collapse-request');
+    };
+    return btn;
   }
 
   /**

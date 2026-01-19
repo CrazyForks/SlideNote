@@ -158,7 +158,11 @@ export class Store extends EventEmitter {
 
     // 如果删除的是当前笔记，切换到下一条
     if (this.state.activeNoteId === id) {
-      this.state.activeNoteId = this.state.notes[0]?.id || null;
+      const nextNoteId = this.state.notes[0]?.id || null;
+      this.state.activeNoteId = nextNoteId;
+
+      // 发出 note:select 事件到全局 bus，让编辑器更新
+      bus.emit('note:select', nextNoteId);
     }
 
     await this._persist();

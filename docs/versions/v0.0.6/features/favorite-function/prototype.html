@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SlideNote v0.0.6 收藏功能设计原型</title>
+  <style>
+    /* ============================================
+       SlideNote 设计系统
+       ============================================ */
+    :root {
+      /* 色彩 */
+      --color-bg-primary: #ffffff;
+      --color-bg-secondary: #f5f5f5;
+      --color-bg-hover: #e8e8e8;
+      --color-text-primary: #1a1a1a;
+      --color-text-secondary: #666666;
+      --color-text-tertiary: #999999;
+      --color-border: #e5e5e5;
+      --color-primary: #0066cc;
+      --color-primary-light: #f0f7ff;
+
+      /* 收藏功能色彩 */
+      --color-star-active: #f59e0b;
+      --color-star-inactive: rgba(0, 0, 0, 0.3);
+
+      /* 字体 */
+      --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --font-size-xs: 11px;
+      --font-size-sm: 12px;
+      --font-size-base: 13px;
+
+      /* 间距 */
+      --spacing-sm: 6px;
+      --spacing-md: 12px;
+
+      /* 圆角 */
+      --radius-sm: 4px;
+      --radius-md: 6px;
+
+      /* 动画 */
+      --duration-fast: 150ms;
+      --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-base);
+      color: var(--color-text-primary);
+      background: #e8e8e8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* 原型容器 */
+    .prototype-container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .prototype-section {
+      background: #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .prototype-title {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* ============================================
+       SlideNote 主容器
+       ============================================ */
+    .slidenote-app {
+      width: 460px;
+      height: 500px;
+      display: flex;
+      background: var(--color-bg-primary);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+
+    /* ============================================
+       左侧：笔记列表区 - 展开状态 (180px)
+       ============================================ */
+    .note-list-section {
+      width: 180px;
+      flex-shrink: 0;
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      transition: width var(--duration-fast) var(--ease-out);
+      position: relative;
+    }
+
+    /* 窄化状态 (80px) */
+    .note-list-section.narrow {
+      width: 80px;
+    }
+
+    /* ============================================
+       收起/展开按钮设计
+       ============================================ */
+
+    /* 收起按钮 - 在右边缘中央 */
+    .sidebar-collapse-btn {
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafafa;
+      border: 1px solid #bbb;
+      border-left: none;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      z-index: 10;
+      padding: 0;
+      box-shadow: 1px 0 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-collapse-btn:hover {
+      background: #f0f7ff;
+      border-color: var(--color-primary);
+      width: 16px;
+      box-shadow: 1px 0 6px rgba(0, 102, 204, 0.15);
+    }
+
+    .sidebar-collapse-btn svg {
+      width: 9px;
+      height: 9px;
+      color: #666;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+
+    .sidebar-collapse-btn:hover svg {
+      color: var(--color-primary);
+    }
+
+    /* 窄化状态下的展开按钮 - 居中圆形 */
+    .note-list-section.narrow .sidebar-expand-btn {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafafa;
+      border: 1px solid #bbb;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      z-index: 10;
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .note-list-section.narrow .sidebar-expand-btn:hover {
+      background: #f0f7ff;
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.2);
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+
+    .note-list-section.narrow .sidebar-expand-btn svg {
+      width: 15px;
+      height: 15px;
+      color: #555;
+    }
+
+    .note-list-section.narrow .sidebar-expand-btn:hover svg {
+      color: var(--color-primary);
+    }
+
+    /* 展开按钮的 tooltip */
+    .note-list-section.narrow .sidebar-expand-btn:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: calc(100% + 10px);
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 5px 10px;
+      font-size: var(--font-size-xs);
+      white-space: nowrap;
+      color: var(--color-text-primary);
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* 窄化时隐藏收起按钮 */
+    .note-list-section.narrow .sidebar-collapse-btn {
+      display: none;
+    }
+
+    /* 展开时隐藏展开按钮 */
+    .note-list-section:not(.narrow) .sidebar-expand-btn {
+      display: none;
+    }
+
+    /* ============================================
+       筛选 Tab
+       ============================================ */
+    .filter-tabs {
+      display: flex;
+      background: var(--color-bg-primary);
+      border-bottom: 1px solid var(--color-border);
+      font-size: var(--font-size-sm);
+    }
+
+    .filter-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 4px;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      border-bottom: 2px solid transparent;
+      transition: all var(--duration-fast);
+      white-space: nowrap;
+    }
+
+    .filter-tab:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-hover);
+    }
+
+    .filter-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    .filter-tab .star-icon-small {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* 窄化状态下的筛选切换 */
+    .note-list-section.narrow .filter-tabs {
+      flex-direction: column;
+    }
+
+    .note-list-section.narrow .filter-tab {
+      padding: 10px 4px;
+      border-bottom: none;
+      border-left: 3px solid transparent;
+    }
+
+    .note-list-section.narrow .filter-tab.active {
+      border-bottom: none;
+      border-left-color: var(--color-primary);
+      background: var(--color-bg-hover);
+    }
+
+    /* ============================================
+       Toolbar
+       ============================================ */
+    .toolbar {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-sm);
+      height: 44px;
+      background: var(--color-bg-primary);
+    }
+
+    .search-icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .search-icon-btn:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .btn-new-note {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      height: 32px;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+    }
+
+    .btn-new-note:hover {
+      background: var(--color-primary-light);
+    }
+
+    /* 窄化时隐藏 Toolbar */
+    .note-list-section.narrow .toolbar {
+      display: none;
+    }
+
+    /* ============================================
+       笔记列表
+       ============================================ */
+    .note-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-sm);
+    }
+
+    /* 笔记列表项 - 展开状态（无星标）*/
+    .note-item {
+      position: relative;
+      padding: var(--spacing-sm) var(--spacing-md);
+      margin-bottom: 2px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+
+    .note-item:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .note-item.active {
+      background: var(--color-bg-primary);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .note-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .note-item-title {
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .note-item-preview {
+      font-size: 10px;
+      color: var(--color-text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    /* ============================================
+       窄化状态样式
+       ============================================ */
+    .note-list-section.narrow .note-item {
+      padding: 8px 8px 8px 12px;
+    }
+
+    /* 窄化时隐藏预览 */
+    .note-list-section.narrow .note-item-preview {
+      display: none;
+    }
+
+    .note-list-section.narrow .note-item-title {
+      font-size: 11px;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    /* 窄化时 active 样式调整 - 增加左边距 */
+    .note-list-section.narrow .note-item.active::before {
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 3px;
+    }
+
+    /* 窄化时给文字加左边距，避免和指示条太近 */
+    .note-list-section.narrow .note-item.active .note-item-title {
+      padding-left: 4px;
+    }
+
+    /* ============================================
+       右键菜单
+       ============================================ */
+    .context-menu {
+      position: absolute;
+      min-width: 140px;
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--color-border);
+      z-index: 1000;
+      padding: 4px 0;
+      display: none;
+    }
+
+    .context-menu.show {
+      display: block;
+    }
+
+    .context-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: background var(--duration-fast);
+    }
+
+    .context-menu-item:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .context-menu-item svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .context-menu-item .star-icon {
+      color: var(--color-star-active);
+    }
+
+    .context-menu-item .star-icon.inactive {
+      color: var(--color-text-tertiary);
+    }
+
+    .context-menu-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin: 4px 0;
+    }
+
+    /* ============================================
+       右侧：编辑区
+       ============================================ */
+    .note-content-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg-primary);
+      padding: var(--spacing-md);
+    }
+
+    .note-header {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .note-title-input {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      border: none;
+      background: transparent;
+    }
+
+    .note-header-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .header-action-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--duration-fast);
+    }
+
+    .header-action-btn:hover {
+      background: var(--color-bg-hover);
+      color: var(--color-text-secondary);
+    }
+
+    .header-action-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ============================================
+       更多菜单
+       ============================================ */
+    .more-menu {
+      position: absolute;
+      min-width: 160px;
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--color-border);
+      z-index: 1000;
+      padding: 4px 0;
+      display: none;
+      right: 12px;
+      top: 60px;
+    }
+
+    .more-menu.show {
+      display: block;
+    }
+
+    .more-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: background var(--duration-fast);
+    }
+
+    .more-menu-item:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .more-menu-item svg {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-tertiary);
+    }
+
+    .more-menu-item.favorite svg {
+      color: var(--color-star-active);
+    }
+
+    .more-menu-item.delete svg {
+      color: var(--color-error, #ff4444);
+    }
+
+    .more-menu-item.delete .menu-label {
+      color: var(--color-error, #ff4444);
+    }
+
+    .more-menu-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin: 4px 0;
+    }
+
+    /* ============================================
+       说明区域
+       ============================================ */
+    .design-notes {
+      max-width: 600px;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .design-notes h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .design-notes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .design-notes li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .design-notes li:last-child {
+      border-bottom: none;
+    }
+
+    .design-notes code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #e83e8c;
+    }
+
+    .hint-text {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* 收藏状态标签 */
+    .favorite-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
+      background: rgba(245, 158, 11, 0.1);
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--color-star-active);
+    }
+
+    /* 滚动条 */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #d0d0d0;
+      border-radius: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b0b0b0;
+    }
+  </style>
+</head>
+<body>
+  <h1>⭐ SlideNote v0.0.6 收藏功能设计原型 v2</h1>
+
+  <div class="prototype-container">
+    <!-- 展开状态 -->
+    <div class="prototype-section">
+      <div class="prototype-title">展开状态 (180px)</div>
+      <div class="slidenote-app" id="app-expanded">
+        <!-- 左侧笔记列表 -->
+        <div class="note-list-section">
+          <!-- 筛选 Tab -->
+          <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all" onclick="setFilter('all', 'expanded')">
+              全部笔记
+            </div>
+            <div class="filter-tab" data-filter="starred" onclick="setFilter('starred', 'expanded')">
+              <svg class="star-icon-small" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 13.5L2.5 9c-1.5-1.5-1.5-4 0-5.5s3.5-1 5.5 1L8 5l.5-.5c2-2 4-2 5.5-1s1.5 4 0 5.5L8 13.5z"/>
+              </svg>
+              收藏 (<span class="star-count">2</span>)
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <div class="search-icon-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+            <div class="btn-new-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              新建
+            </div>
+          </div>
+
+          <!-- 笔记列表 -->
+          <div class="note-list" id="note-list-expanded" oncontextmenu="showContextMenu(event, 'expanded')">
+            <!-- 笔记项会通过 JS 渲染 -->
+          </div>
+
+          <!-- 收起按钮 (展开状态显示) -->
+          <button class="sidebar-collapse-btn" title="收起侧边栏" onclick="toggleSidebar('expanded')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="11 17 6 12 11 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 右侧编辑区 -->
+        <div class="note-content-section">
+          <div class="note-header">
+            <input class="note-title-input" value="AI 提示词模板" readonly>
+            <div class="note-header-actions">
+              <button class="header-action-btn" title="更多" onclick="toggleMoreMenu()">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="5" r="2"/>
+                  <circle cx="12" cy="12" r="2"/>
+                  <circle cx="12" cy="19" r="2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="note-editor">
+            <p>你是一个专业的写作助手，请帮我...</p>
+            <p style="margin-top: 8px; color: #999;">这是一个用于 DeepSeek 的提示词模板</p>
+          </div>
+        </div>
+
+        <!-- 更多菜单 -->
+        <div class="more-menu" id="more-menu">
+          <div class="more-menu-item favorite" onclick="toggleFavoriteFromMenu()">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 13.5L2.5 9c-1.5-1.5-1.5-4 0-5.5s3.5-1 5.5 1L8 5l.5-.5c2-2 4-2 5.5-1s1.5 4 0 5.5L8 13.5z"/>
+            </svg>
+            <span class="menu-label" id="menu-favorite-label">收藏</span>
+          </div>
+          <div class="more-menu-divider"></div>
+          <div class="more-menu-item delete">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 4h10M5 4v1h6V4M6 4V3h4v1M5 6v7a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V6"/>
+            </svg>
+            <span class="menu-label">删除</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右键菜单 -->
+      <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" onclick="toggleFavoriteFromContext()">
+          <svg class="star-icon inactive" viewBox="0 0 16 16" fill="currentColor" id="context-star-icon">
+            <path d="M8 13.5L2.5 9c-1.5-1.5-1.5-4 0-5.5s3.5-1 5.5 1L8 5l.5-.5c2-2 4-2 5.5-1s1.5 4 0 5.5L8 13.5z"/>
+          </svg>
+          <span id="context-favorite-label">收藏</span>
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 4h10M5 4v1h6V4M6 4V3h4v1M5 6v7a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V6"/>
+          </svg>
+          删除
+        </div>
+      </div>
+    </div>
+
+    <!-- 窄化状态 -->
+    <div class="prototype-section">
+      <div class="prototype-title">窄化状态 (80px)</div>
+      <div class="slidenote-app" id="app-narrow">
+        <!-- 左侧笔记列表 -->
+        <div class="note-list-section narrow">
+          <!-- 筛选切换 -->
+          <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all" onclick="setFilter('all', 'narrow')">
+              全部
+            </div>
+            <div class="filter-tab" data-filter="starred" onclick="setFilter('starred', 'narrow')">
+              <svg class="star-icon-small" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 13.5L2.5 9c-1.5-1.5-1.5-4 0-5.5s3.5-1 5.5 1L8 5l.5-.5c2-2 4-2 5.5-1s1.5 4 0 5.5L8 13.5z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 笔记列表 -->
+          <div class="note-list" id="note-list-narrow">
+            <!-- 笔记项会通过 JS 渲染 -->
+          </div>
+
+          <!-- 展开按钮 (窄化状态显示) -->
+          <button class="sidebar-expand-btn" data-tooltip="展开侧边栏" onclick="toggleSidebar('narrow')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 14 12 9 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 右侧编辑区 -->
+        <div class="note-content-section">
+          <div class="note-header">
+            <input class="note-title-input" value="AI 提示词模板" readonly>
+            <div class="note-header-actions">
+              <button class="header-action-btn" title="更多">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="5" r="2"/>
+                  <circle cx="12" cy="12" r="2"/>
+                  <circle cx="12" cy="19" r="2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="note-editor">
+            <p>你是一个专业的写作助手，请帮我...</p>
+            <p style="margin-top: 8px; color: #999;">这是一个用于 DeepSeek 的提示词模板</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="hint-text">💡 右键点击笔记可打开右键菜单 | 点击更多菜单（⋮）可收藏</p>
+
+  <!-- 设计说明 -->
+  <div class="design-notes">
+    <h2>📐 设计规范 v2</h2>
+    <ul>
+      <li><strong>收藏入口</strong>：① 右键菜单 ② 更多菜单（⋮）</li>
+      <li><strong>列表显示</strong>：不显示星标，通过筛选 Tab 查看"收藏"</li>
+      <li><strong>展开宽度</strong>：<code>180px</code> - 显示标题 + 预览</li>
+      <li><strong>窄化宽度</strong>：<code>80px</code> - 只显示标题，文字过长显示...</li>
+      <li><strong>窄化指示条</strong>：active 状态文字左边距 4px，避免紧贴</li>
+      <li><strong>星标颜色</strong>：已收藏 <code>#f59e0b</code>（金色）</li>
+    </ul>
+  </div>
+
+  <script>
+    // 笔记数据
+    const notes = [
+      { id: 1, title: 'AI 提示词模板', preview: '你是一个专业的写作助手...', starred: true },
+      { id: 2, title: '常用命令', preview: 'git commit -m "..."', starred: false },
+      { id: 3, title: 'API 密钥 OpenAI API Key', preview: 'OpenAI API Key: sk-...', starred: true },
+      { id: 4, title: '会议记录模板', preview: '会议时间：2024-01-15', starred: false },
+      { id: 5, title: '部署脚本', preview: 'npm run build && deploy', starred: false },
+    ];
+
+    // 当前筛选模式
+    let currentFilter = 'all';
+    let currentNoteId = 1;
+
+    // 渲染笔记列表
+    function renderNoteList(containerId, isNarrow) {
+      const container = document.getElementById(containerId);
+      const filteredNotes = currentFilter === 'starred'
+        ? notes.filter(n => n.starred)
+        : notes;
+
+      if (filteredNotes.length === 0) {
+        container.innerHTML = '<div class="empty-state">没有收藏的笔记</div>';
+        return;
+      }
+
+      container.innerHTML = filteredNotes.map(note => `
+        <div class="note-item ${note.id === currentNoteId ? 'active' : ''}"
+             data-id="${note.id}"
+             onclick="selectNote(${note.id})"
+             oncontextmenu="showContextMenu(event, 'note', ${note.id})">
+          <div class="note-item-title">${note.title}</div>
+          ${!isNarrow ? `<div class="note-item-preview">${note.preview}</div>` : ''}
+        </div>
+      `).join('');
+
+      updateFavoriteUI();
+    }
+
+    // 选择笔记
+    function selectNote(id) {
+      currentNoteId = id;
+      updateAllLists();
+      updateFavoriteUI();
+    }
+
+    // 更新收藏相关 UI
+    function updateFavoriteUI() {
+      const note = notes.find(n => n.id === currentNoteId);
+      if (!note) return;
+
+      const isFavorited = note.starred;
+
+      // 更新更多菜单文字
+      const menuLabel = document.getElementById('menu-favorite-label');
+      if (menuLabel) {
+        menuLabel.textContent = isFavorited ? '取消收藏' : '收藏';
+      }
+
+      // 更新右键菜单
+      const contextIcon = document.getElementById('context-star-icon');
+      const contextLabel = document.getElementById('context-favorite-label');
+      if (contextIcon) {
+        contextIcon.className = isFavorited ? 'star-icon' : 'star-icon inactive';
+      }
+      if (contextLabel) {
+        contextLabel.textContent = isFavorited ? '取消收藏' : '收藏';
+      }
+    }
+
+    // 切换收藏状态
+    function toggleFavorite() {
+      const note = notes.find(n => n.id === currentNoteId);
+      if (note) {
+        note.starred = !note.starred;
+        updateAllLists();
+        updateStarCounts();
+        updateFavoriteUI();
+      }
+    }
+
+    // 从更多菜单切换收藏
+    function toggleFavoriteFromMenu() {
+      toggleFavorite();
+      toggleMoreMenu();
+    }
+
+    // 从右键菜单切换收藏
+    function toggleFavoriteFromContext() {
+      toggleFavorite();
+      hideContextMenu();
+    }
+
+    // 切换更多菜单显示
+    function toggleMoreMenu() {
+      const menu = document.getElementById('more-menu');
+      menu.classList.toggle('show');
+    }
+
+    // 显示右键菜单
+    function showContextMenu(event, type, noteId) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (type !== 'note') return;
+
+      // 选择右键点击的笔记
+      if (noteId && noteId !== currentNoteId) {
+        selectNote(noteId);
+      }
+
+      const menu = document.getElementById('context-menu');
+      const section = document.querySelector('.prototype-section');
+      const rect = section.getBoundingClientRect();
+
+      menu.style.left = (event.clientX - rect.left) + 'px';
+      menu.style.top = (event.clientY - rect.top) + 'px';
+      menu.classList.add('show');
+    }
+
+    // 隐藏右键菜单
+    function hideContextMenu() {
+      const menu = document.getElementById('context-menu');
+      menu.classList.remove('show');
+    }
+
+    // 点击其他地方关闭菜单
+    document.addEventListener('click', (e) => {
+      document.getElementById('more-menu').classList.remove('show');
+      if (!e.target.closest('.context-menu')) {
+        hideContextMenu();
+      }
+    });
+
+    // 更新所有列表
+    function updateAllLists() {
+      renderNoteList('note-list-expanded', false);
+      renderNoteList('note-list-narrow', true);
+    }
+
+    // 更新收藏数量
+    function updateStarCounts() {
+      const count = notes.filter(n => n.starred).length;
+      document.querySelectorAll('.star-count').forEach(el => {
+        el.textContent = count;
+      });
+    }
+
+    // 设置筛选模式
+    function setFilter(filter, type) {
+      currentFilter = filter;
+
+      // 更新 Tab 样式
+      const prefix = type === 'expanded' ? 'app-expanded' : 'app-narrow';
+      const container = document.getElementById(prefix);
+      container.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.filter === filter);
+      });
+
+      // 重新渲染列表
+      renderNoteList(`note-list-${type}`, type === 'narrow');
+    }
+
+    // 切换侧边栏状态
+    function toggleSidebar(currentState) {
+      console.log('切换侧边栏:', currentState);
+    }
+
+    // 初始化
+    updateAllLists();
+    updateStarCounts();
+    updateFavoriteUI();
+  </script>
+</body>
+</html>

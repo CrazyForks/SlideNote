@@ -182,5 +182,17 @@
   "nextNote": {
     "message": "下一篇",
     "description": "导航到下一篇笔记"
+  },
+  "feedback": {
+    "message": "意见反馈",
+    "description": "意见反馈链接"
+  },
+  "feedbackTitle": {
+    "message": "提交意见反馈帮助我们改进",
+    "description": "意见反馈链接提示"
+  },
+  "viewSource": {
+    "message": "查看源码",
+    "description": "查看源码链接提示"
   }
 }

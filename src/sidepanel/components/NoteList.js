@@ -172,6 +172,7 @@ export class NoteList {
    * @private
    */
   _handleSelect(note) {
+    // 只切换选中状态，不改变折叠状态
     this.props.store?.setActiveNote(note.id);
     this.props.bus?.emit('note:select', note.id);
   }
