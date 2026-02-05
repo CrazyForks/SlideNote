@@ -22,3 +22,10 @@ npm-debug.log*
 # Environment
 .env
 .env.local
+
+# Build packages
+versions/
+*.zip
+
+# Marketing materials (generated)
+docs/marketing/
