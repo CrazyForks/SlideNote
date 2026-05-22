@@ -352,5 +352,13 @@
   "unpin": {
     "message": "取消置顶",
     "description": "取消置顶笔记"
+  },
+  "toggleList": {
+    "message": "切换笔记列表 (展开/收起)",
+    "description": "切换笔记列表显示状态按钮"
+  },
+  "selectNote": {
+    "message": "选择笔记",
+    "description": "空白欢迎状态下的选择笔记按钮"
   }
 }

@@ -533,6 +533,7 @@ button {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative; /* 确保绝对定位的下拉菜单以此为基准 */
 }
 
 /* 内容区头部 */
@@ -2201,3 +2202,615 @@ button {
 .toast.info .toast-icon {
   color: var(--color-primary);
 }
+
+/* ============================================
+   单面板极简抽屉式设计 (List Drawer & Premium Styles)
+   ============================================ */
+
+/* 抽屉半透明背景遮罩 (含高阶毛玻璃质感) */
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 99;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 左侧滑动列表抽屉 */
+.list-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  z-index: 100;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.list-drawer.open {
+  transform: translateX(0);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.08);
+}
+
+/* 抽屉内列表尺寸优化，填满抽屉 */
+.list-drawer .note-list {
+  height: 100%;
+  max-height: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm);
+}
+
+/* 统一极简头部 (CSS Grid 架构) */
+.app-header.note-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+  gap: 6px var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.header-left-actions {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-center-area {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.header-right-actions {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.note-meta {
+  grid-column: 1 / span 3;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  padding: 2px 0 0 2px;
+}
+
+/* 品牌 Logo 标题艺术渐变 */
+.app-header-title {
+  font-size: 16px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.2px;
+  font-family: var(--font-family-base);
+}
+
+/* 极简精致标题输入框 */
+.note-title-input {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast);
+  outline: none;
+  margin: 0 !important;
+}
+
+.note-title-input:hover {
+  background: var(--color-bg-secondary);
+}
+
+.note-title-input:focus {
+  background: var(--color-bg-secondary);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+
+/* 头部搜索栏过渡动画与设计 */
+.header-search-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 0 10px;
+  height: 32px;
+  width: 100%;
+  animation: searchSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast), background var(--duration-fast);
+}
+
+.header-search-wrapper:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+  background: var(--color-bg-primary);
+}
+
+@keyframes searchSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.header-search-input {
+  flex: 1;
+  font-size: 13px;
+  border: none;
+  background: transparent;
+  padding: 0 4px;
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.btn-search-close {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+  padding: 0 4px;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transition: background var(--duration-fast);
+}
+
+.btn-search-close:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+/* 顶部交互操作按钮通用样式 */
+.header-left-actions button,
+.header-right-actions button {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) var(--ease-out);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.header-left-actions button:hover,
+.header-right-actions button:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+  transform: translateY(-0.5px);
+}
+
+.header-left-actions button:active,
+.header-right-actions button:active {
+  background: var(--color-bg-active);
+  transform: translateY(0);
+}
+
+.header-left-actions button svg,
+.header-right-actions button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.header-right-actions button.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 新建按钮强调样式 */
+.btn-new-note-header {
+  color: var(--color-primary) !important;
+}
+
+.btn-new-note-header:hover {
+  background: var(--color-primary-light) !important;
+}
+
+/* 统一精致页脚 (App Footer) */
+.app-footer {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  flex-shrink: 0;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  transition: all var(--duration-fast) var(--ease-out);
+  border: none;
+  background: transparent;
+}
+
+.footer-btn:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+  transform: translateY(-0.5px);
+}
+
+.footer-btn:active {
+  background: var(--color-bg-active);
+  transform: translateY(0);
+}
+
+/* 页脚容量条 (StorageBar) 扁平覆盖层 */
+.app-footer .storage-bar {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  width: 100%;
+  max-width: 150px;
+}
+
+.app-footer .storage-bar-progress {
+  height: 4px !important;
+  border-radius: 2px !important;
+}
+
+.app-footer .storage-bar-text {
+  font-size: 10px !important;
+  margin-bottom: 2px !important;
+}
+
+/* 页脚右侧全局更多菜单 (MoreMenu) */
+.footer-more {
+  position: relative;
+}
+
+.footer-more-trigger {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.footer-more-trigger:hover,
+.footer-more-trigger.active {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.more-dots {
+  display: flex;
+  gap: 2.5px;
+}
+
+.more-dots span {
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.more-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 150px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 4px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.95);
+  transition: all var(--duration-fast) var(--ease-out);
+  z-index: 1000;
+}
+
+.more-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.more-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.more-menu-item:hover {
+  background: var(--color-bg-secondary);
+}
+
+.more-menu-item .menu-icon {
+  font-size: 14px;
+}
+
+.more-menu-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 4px 0;
+}
+
+/* 空白欢迎界面按钮精致化样式 */
+.empty-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.empty-btn {
+  height: 34px;
+  padding: 0 var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast);
+  border: none;
+}
+
+.empty-btn.btn-primary {
+  color: white;
+  background: var(--color-primary);
+}
+
+.empty-btn.btn-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+.empty-btn.btn-secondary {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.empty-btn.btn-secondary:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   左侧滑动列表抽屉页脚 (Drawer Footer)
+   ============================================ */
+.drawer-footer {
+  padding: 16px 14px;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 标语 (Slogan) */
+.drawer-brand-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  text-align: center;
+  margin: 2px 0;
+}
+
+.drawer-brand-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+}
+
+.drawer-brand-slogan {
+  font-size: 10.5px;
+  color: var(--color-text-tertiary);
+  line-height: 1.2;
+}
+
+/* 全局操作网格 (导入、导出、反馈、关于) */
+.drawer-more-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.drawer-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.drawer-action-btn:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-0.5px);
+  box-shadow: var(--shadow-sm);
+}
+
+.drawer-action-btn:active {
+  background: var(--color-bg-active);
+  transform: translateY(0);
+}
+
+.drawer-action-btn span:first-child {
+  font-size: 13px;
+}
+
+/* Drawer Top 内 StorageBar 样式极简覆盖 */
+.list-drawer > .storage-bar {
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-secondary) !important;
+  padding: 12px 14px 10px;
+  box-shadow: none;
+}
+
+.list-drawer > .storage-bar .storage-progress {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  margin-top: 5px;
+}
+
+.list-drawer > .storage-bar .storage-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+.list-drawer > .storage-bar .storage-info {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  padding: 0;
+}
+
+/* 抽屉底部更多浮动菜单 (Drawer Popup Menu) */
+.drawer-footer {
+  position: relative; /* 确保弹出菜单以页脚容器为基准进行绝对定位 */
+}
+
+.drawer-popup-menu {
+  position: absolute;
+  bottom: 60px; /* 浮动在按钮网格上方，避免被遮挡 */
+  right: 14px;
+  width: 140px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 4px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.95);
+  transition: all var(--duration-fast) var(--ease-out);
+  z-index: 110; /* 高于常规列表项，确保不被阻挡 */
+}
+
+.drawer-popup-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.drawer-popup-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.drawer-popup-menu-item:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-primary);
+}
+
+.drawer-popup-menu-item .menu-icon {
+  font-size: 14px;
+}
+
+.drawer-popup-menu-item .menu-label {
+  flex: 1;
+}
+
+/* 更多按钮处于激活态时的增强样式 */
+.btn-drawer-more.active {
+  background: var(--color-bg-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+
+
+

@@ -6,7 +6,6 @@
 
 import { Store, SyncManager } from './core/Store.js';
 import { bus } from './core/EventBus.js';
-import { Toolbar } from './components/Toolbar.js';
 import { NoteList } from './components/NoteList.js';
 import { NoteEditor } from './components/NoteEditor.js';
 import { ConfirmDialog } from './components/ConfirmDialog.js';
@@ -64,72 +63,35 @@ class App {
       return;
     }
 
-    // 创建左侧笔记列表区域
-    const listSection = document.createElement('div');
-    listSection.className = 'note-list-section';
-
-    // 顶部工具栏
-    this.components.toolbar = new Toolbar({ bus });
-    const toolbarEl = this.components.toolbar.render();
-    listSection.appendChild(toolbarEl);
-
-    // 笔记列表
+    // 实例化笔记列表
     this.components.noteList = new NoteList({ store: this.store, bus });
-    const noteListEl = this.components.noteList.render();
-    this.components.noteList.el = noteListEl;
-    listSection.appendChild(noteListEl);
 
-    // 存储容量条（列表底部）
+    // 实例化存储容量条
     this.components.storageBar = new StorageBar({ store: this.store });
-    const storageBarEl = this.components.storageBar.render();
-    listSection.appendChild(storageBarEl);
 
-    // 绑定事件委托
-    this.components.noteList._bindItemEvents(noteListEl);
+    // 实例化全局更多菜单组件
+    this.components.moreMenu = new MoreMenu({ bus });
 
-    // 初始化 _itemMap
-    this.components.noteList.initialize();
+    // 决定并通知 NoteEditor 初始抽屉的状态（如果没有活动笔记或没有笔记，默认展开）
+    const activeNoteId = this.store.state.activeNoteId;
+    const hasNotes = this.store.state.notes && this.store.state.notes.length > 0;
+    const initialListOpen = !activeNoteId || !hasNotes;
 
-    // 底部页脚
-    const footer = this._renderFooter();
-    listSection.appendChild(footer);
+    // 实例化笔记编辑器，将这些子组件做为 props 传过去
+    this.components.noteEditor = new NoteEditor({
+      store: this.store,
+      bus,
+      noteList: this.components.noteList,
+      storageBar: this.components.storageBar,
+      footerMoreMenu: this.components.moreMenu,
+      initialListOpen
+    });
 
-    // 创建右侧内容区域
-    const contentSection = document.createElement('div');
-    contentSection.className = 'note-content-section';
-
-    // 笔记编辑器
-    this.components.noteEditor = new NoteEditor({ store: this.store, bus });
     const editorEl = this.components.noteEditor.render();
     this.components.noteEditor.el = editorEl;
-    contentSection.appendChild(editorEl);
 
-    // 添加到容器
-    container.append(listSection, contentSection);
-  }
-
-  /**
-   * 渲染底部页脚
-   * @private
-   */
-  _renderFooter() {
-    const footer = document.createElement('div');
-    footer.className = 'note-list-footer';
-
-    // 产品信息
-    const productInfo = document.createElement('div');
-    productInfo.className = 'footer-product-info';
-    productInfo.innerHTML = `
-      <div class="footer-product-name">SlideNote</div>
-      <div class="footer-product-slogan">${t('tagline') || '侧边笔记，常伴左右'}</div>
-    `;
-
-    // 更多菜单组件
-    this.components.moreMenu = new MoreMenu({ bus });
-    const moreMenuEl = this.components.moreMenu.render();
-
-    footer.append(productInfo, moreMenuEl);
-    return footer;
+    // 直接将编辑器挂载到主容器 (100% 满屏)
+    container.appendChild(editorEl);
   }
 
   /**

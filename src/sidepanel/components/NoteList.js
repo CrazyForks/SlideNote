@@ -12,7 +12,6 @@ export class NoteList {
     this.state = {
       notes: [],
       activeId: null,
-      searchQuery: '',
     };
     this.el = null;
     this._cleanup = [];
@@ -43,9 +42,6 @@ export class NoteList {
    * 获取当前应显示的笔记（搜索 or 排序）
    */
   _getDisplayNotes() {
-    if (this.state.searchQuery) {
-      return this.props.store?.searchNotes(this.state.searchQuery) || [];
-    }
     return this.props.store?.getSortedNotes() || [];
   }
 
@@ -171,12 +167,7 @@ export class NoteList {
     });
     if (unsubSelect) this._cleanup.push(unsubSelect);
 
-    // 搜索变化
-    const unsubSearch = this.props.bus?.on('search:change', (query) => {
-      this.setState({ searchQuery: query });
-      this._handleStoreChange();
-    });
-    if (unsubSearch) this._cleanup.push(unsubSearch);
+
 
     // 创建笔记 - 清空空状态占位
     const unsubCreate = this.props.bus?.on('note:create', () => {

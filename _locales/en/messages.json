@@ -218,5 +218,13 @@
   "storageFull": {
     "message": "Storage full",
     "description": "Storage full error"
+  },
+  "toggleList": {
+    "message": "Toggle Note List",
+    "description": "Toggle note list popover button"
+  },
+  "selectNote": {
+    "message": "Select Note",
+    "description": "Select note button on welcome screen"
   }
 }
